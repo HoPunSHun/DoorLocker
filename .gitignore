@@ -1,0 +1,14 @@
+#Single Files
+.gitignore~
+MakeFile
+MakeFile~
+run.bat
+bin/main.exe
+
+#Multiple Files
+*.un~
+*.swp
+*.cpp~
+*.h~
+*.un~
+*.swp
