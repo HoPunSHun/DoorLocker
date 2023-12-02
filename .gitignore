@@ -3,7 +3,8 @@
 MakeFile
 MakeFile~
 run.bat
-bin/main.exe
+run.bat~
+DoorLocker/main.exe
 
 #Multiple Files
 *.un~
