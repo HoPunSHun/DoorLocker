@@ -11,6 +11,11 @@ DoorManager::DoorManager()
 
 void DoorManager::Init()
 {
+
+	ReadCardInfo();
+
+	std::cout << CheckCard("data/JeremyCard.txt") << '\n';
+
 }
 
 void DoorManager::ReadNextId()
@@ -37,6 +42,36 @@ void DoorManager::ReadNextId()
 
 }
 
+void DoorManager::ReadCardInfo(const std::string &cardPath, Card &card)
+{
+
+	std::fstream file;	
+
+	file.open(cardPath, std::ios::in);
+
+	if (file.is_open())
+	{
+
+		std::string name, securityCode;
+
+		int sex, id;
+
+		file >> name >> sex >> id >> securityCode;
+
+		card = Card(name, sex, id, securityCode);
+
+	}
+	else
+	{
+
+		FILEOPENERROR(cardPath);
+
+	}
+
+	file.close();
+
+}
+
 void DoorManager::ReadCardInfo()
 {
 
@@ -54,8 +89,7 @@ void DoorManager::ReadCardInfo()
 		while (file >> name)
 		{		
 
-			int sex;
-			int id;
+			int sex, id;
 
 			std::string securityCode;
 
@@ -129,6 +163,29 @@ void DoorManager::AddCard(const std::string &name, int sex, int securityCodeLeve
 
 }
 
+bool DoorManager::CheckCard(const std::string& cardPath)
+{
+
+	Card card;
+
+	ReadCardInfo(cardPath, card);
+
+	for (auto _card : m_cards)
+	{
+
+		if (card == _card)
+		{
+
+			return true;
+
+		}
+
+	}
+
+	return false;
+
+}
+
 void DoorManager::SaveNextId()
 {
 
@@ -187,7 +244,7 @@ void DoorManager::CopyToFile(std::fstream &file, const std::vector<std::string> 
 
 }
 
-void DoorManager::FILEOPENERROR(const char* fileName)
+void DoorManager::FILEOPENERROR(const std::string &fileName)
 {
 
 	std::cout << "Unable to open file '"  << fileName << "'\n";

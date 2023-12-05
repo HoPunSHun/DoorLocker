@@ -24,13 +24,17 @@ private:
 
 	void ReadCardInfo();
 
+	void ReadCardInfo(const std::string &cardPath, Card &card);
+
 	void CopyFile(std::fstream &file, std::vector<std::string> &lines);
 
 	void CopyToFile(std::fstream &file, const std::vector<std::string> &lines);
 
-	void FILEOPENERROR(const char* fileName);
+	bool CheckCard(const std::string &cardPath);
 
 	void SaveNextId();
+
+	void FILEOPENERROR(const std::string &fileName);
 
 private:
 

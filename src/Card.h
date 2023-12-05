@@ -44,6 +44,20 @@ public:
 
 	}
 
+	bool operator==(const Card& other) const
+	{
+
+		return  (
+			
+			m_name == other.GetName() &&
+			m_sex == other.GetSex() &&
+			m_id == other.GetId() &&
+			m_securityCode == other.GetSecurityCode()	
+				
+			);
+	
+	}
+
 private:
 
 	std::string m_name;
