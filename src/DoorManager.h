@@ -17,18 +17,20 @@ public:
 	void AddCard(const std::string &name, int sex, int securityCodeLevel);
 
 	const std::string GenerateSecurityCode(int numOfChar);
-	
-	void SaveNextId();
-
+		
 private:
 
 	void ReadNextId();
 
 	void ReadCardInfo();
 
-	void SaveNewCard(const Card &card);
+	void CopyFile(std::fstream &file, std::vector<std::string> &lines);
+
+	void CopyToFile(std::fstream &file, const std::vector<std::string> &lines);
 
 	void FILEOPENERROR(const char* fileName);
+
+	void SaveNextId();
 
 private:
 

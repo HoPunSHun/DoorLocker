@@ -1,6 +1,3 @@
-#include <iostream>
-#include <string>
-#include <cstdlib>
 #include <ctime>
 #include "DoorManager.h"
 
@@ -12,9 +9,5 @@ int main()
 	DoorManager doorManager;
 
 	doorManager.Init();
-
-	doorManager.ListCards();
-
-	doorManager.SaveNextId();
 
 }

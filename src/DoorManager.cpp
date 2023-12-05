@@ -6,14 +6,11 @@
 #include <cstring>
 
 DoorManager::DoorManager()
+	:	m_nextId	(0)
 {}
 
 void DoorManager::Init()
 {
-
-	ReadNextId();
-	ReadCardInfo();
-
 }
 
 void DoorManager::ReadNextId()
@@ -88,7 +85,7 @@ void DoorManager::ListCards()
 
 		Card card = m_cards[i];
 
-		std::cout << i + 1 << '.' << card.GetName() << ' ' << card.GetSex() << ' ' << card.GetId() << card.GetSecurityCode() << '\n';
+		std::cout << i + 1 << '.' << card.GetName() << ' ' << card.GetSex() << ' ' << card.GetId() << ' ' << card.GetSecurityCode() << '\n';
 
 	}
 
@@ -114,9 +111,21 @@ const std::string DoorManager::GenerateSecurityCode(int numOfChar)
 void DoorManager::AddCard(const std::string &name, int sex, int securityCodeLevel)
 {
 
+	std::string securityCode = GenerateSecurityCode(securityCodeLevel);
+
 	Card card(name, sex, m_nextId, GenerateSecurityCode(securityCodeLevel));	
 
+	m_cards.push_back(card);
+
+	std::fstream file;
+
+	file.open("data/CardInfo.txt", std::ios::in | std::ios::app);
+
+	file << '\n' << name << ' ' << sex << ' ' << securityCode;
+
 	m_nextId++;
+
+	SaveNextId();
 
 }
 
@@ -141,6 +150,40 @@ void DoorManager::SaveNextId()
 	}
 
 	file.close();
+
+}
+
+void DoorManager::CopyFile(std::fstream &file, std::vector<std::string> &lines)
+{
+
+	file.seekg(0);
+
+	while (file.good())
+	{
+
+		std::string line;
+
+		std::getline(file, line);
+
+		lines.push_back(line);
+
+	}
+
+	file.seekg(0);	
+
+}
+
+void DoorManager::CopyToFile(std::fstream &file, const std::vector<std::string> &lines)
+{
+
+	file.seekp(0);
+
+	for (auto const &line : lines)
+	{
+
+		file << line << '\n';
+
+	}
 
 }
 
