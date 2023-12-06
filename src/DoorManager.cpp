@@ -3,7 +3,6 @@
 #include <iostream>
 #include <cstdlib>
 #include <fstream>
-#include <cstring>
 
 DoorManager::DoorManager()
 	:	m_nextId	(0)
@@ -13,8 +12,6 @@ void DoorManager::Init()
 {
 
 	ReadCardInfo();
-
-	std::cout << CheckCard("data/Jeremy.txt") << '\n';
 
 }
 
@@ -95,7 +92,7 @@ void DoorManager::ReadCardInfo()
 
 			file >> sex >> id >> securityCode;	
 
-			m_cards.push_back(Card(name, sex, id, securityCode));
+			m_cards[name] = Card(name, sex, id, securityCode);
 
 			m_numOfCards++;
 
@@ -114,12 +111,16 @@ void DoorManager::ReadCardInfo()
 void DoorManager::ListCards()
 {
 
-	for (int i = 0; i < m_cards.size(); i++)
+	int loopCount = 1;
+
+	for (auto it = m_cards.begin(); it != m_cards.end(); it++)
 	{
 
-		Card card = m_cards[i];
+		Card card = it->second;
 
-		std::cout << i + 1 << '.' << card.GetName() << ' ' << card.GetSex() << ' ' << card.GetId() << ' ' << card.GetSecurityCode() << '\n';
+		std::cout << loopCount << '.' << card.GetName() << ' ' << card.GetSex() << ' ' << card.GetId() << ' ' << card.GetSecurityCode() << '\n';
+
+		loopCount++;
 
 	}
 
@@ -151,7 +152,7 @@ void DoorManager::AddCard(const std::string &name, int sex, int securityCodeLeve
 
 	Card card(name, sex, m_nextId, GenerateSecurityCode(securityCodeLevel));	
 
-	m_cards.push_back(card);
+	m_cards[name] = card;
 
 	std::fstream file;
 
@@ -173,26 +174,35 @@ void DoorManager::AddCard(const std::string &name, int sex, int securityCodeLeve
 
 }
 
+void DoorManager::SetCard(const Card &card)
+{
+
+	for (auto it = m_cards.begin(); it != m_cards.end(); it++)
+	{
+
+		Card _card = it->second;
+
+		if (_card.GetId() == card.GetId())
+		{
+
+			_card = card;			
+
+		}
+
+	}
+
+}
+
 bool DoorManager::CheckCard(const std::string& cardPath)
 {
 
 	Card card;
 
 	ReadCardInfo(cardPath, card);
+	
+	bool result = (card == m_cards[card.GetName()]) ? true : false;
 
-	for (auto _card : m_cards)
-	{
-
-		if (card == _card)
-		{
-
-			return true;
-
-		}
-
-	}
-
-	return false;
+	return result;
 
 }
 
@@ -249,6 +259,30 @@ void DoorManager::CopyToFile(std::fstream &file, const std::vector<std::string> 
 	{
 
 		file << line << '\n';
+
+	}
+
+}
+
+void DoorManager::CopyCardInfoToFile()
+{
+
+	std::fstream file;
+
+	file.open("data/CardInfo.txt", std::ios::out | std::ios::trunc);
+
+	for (auto it = m_cards.begin(); it != m_cards.end(); it++)
+	{
+
+		Card _card = it->second;
+
+		std::string name = _card.GetName();
+		std::string securityCode = _card.GetSecurityCode();
+
+		int sex = _card.GetSex();
+		int id = _card.GetId();
+
+		file << name << ' ' << sex << ' ' << id << ' ' << securityCode << '\n';
 
 	}
 

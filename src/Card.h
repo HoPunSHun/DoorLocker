@@ -44,6 +44,20 @@ public:
 
 	}
 
+	void SetName(const std::string &name)
+	{
+
+		m_name = name;
+
+	}
+
+	void SetSex(int sex)
+	{
+
+		m_sex = sex;
+
+	}
+
 	bool operator==(const Card& other) const
 	{
 

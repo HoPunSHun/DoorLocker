@@ -1,4 +1,5 @@
 #pragma once
+#include <map>
 #include <vector>
 
 #include "Card.h"
@@ -30,7 +31,11 @@ private:
 
 	void CopyToFile(std::fstream &file, const std::vector<std::string> &lines);
 
+	void CopyCardInfoToFile();
+
 	bool CheckCard(const std::string &cardPath);
+
+	void SetCard(const Card &card);
 
 	void SaveNextId();
 
@@ -42,6 +47,6 @@ private:
 
 	int m_nextId;
 
-	std::vector<Card> m_cards;
+	std::map<std::string, Card> m_cards;
 
 };
