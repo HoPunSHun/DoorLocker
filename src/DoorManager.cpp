@@ -15,6 +15,104 @@ void DoorManager::Init()
 
 }
 
+void DoorManager::AddCard(const std::string &name, int sex, int securityCodeLevel)
+{
+
+	std::string securityCode = GenerateSecurityCode(securityCodeLevel);
+
+	std::string cardPath = std::string("data/") + name + ".txt";
+
+	Card card(name, sex, m_nextId, GenerateSecurityCode(securityCodeLevel));	
+
+	m_cards[name] = card;
+
+	std::fstream file;
+
+	file.open("data/CardInfo.txt", std::ios::in | std::ios::app);
+
+	file << '\n' << name << ' ' << sex << ' ' << m_nextId <<  ' ' << securityCode;
+
+	file.close();
+
+	file.open(cardPath, std::ios::out | std::ios::trunc);
+
+	file << name << ' ' << sex << ' ' << m_nextId << ' ' << securityCode;
+
+	file.close();
+
+	m_nextId++;
+
+	SaveNextId();
+
+}
+
+const std::string DoorManager::GenerateSecurityCode(int numOfChar)
+{
+
+	std::string code;
+
+	for (int i = 0; i < numOfChar; i++)
+	{
+
+		code += char((rand() % (127 - 21)) + 21);
+
+	}
+
+
+	return code;
+
+}
+
+bool DoorManager::CheckCard(const std::string& cardPath)
+{
+
+	Card card;
+
+	ReadCardInfo(cardPath, card);
+	
+	bool result = (card == m_cards[card.GetName()]) ? true : false;
+
+	return result;
+
+}
+
+void DoorManager::SetCard(const Card &card)
+{
+
+	for (auto it = m_cards.begin(); it != m_cards.end(); it++)
+	{
+
+		Card _card = it->second;
+
+		if (_card.GetId() == card.GetId())
+		{
+
+			_card = card;			
+
+		}
+
+	}
+
+}
+
+void DoorManager::ListCards()
+{
+
+	int loopCount = 1;
+
+	for (auto it = m_cards.begin(); it != m_cards.end(); it++)
+	{
+
+		Card card = it->second;
+
+		std::cout << loopCount << '.' << card.GetName() << ' ' << card.GetSex() << ' ' << card.GetId() << ' ' << card.GetSecurityCode() << '\n';
+
+		loopCount++;
+
+	}
+
+}
+
 void DoorManager::ReadNextId()
 {
 
@@ -108,128 +206,6 @@ void DoorManager::ReadCardInfo()
 
 }
 
-void DoorManager::ListCards()
-{
-
-	int loopCount = 1;
-
-	for (auto it = m_cards.begin(); it != m_cards.end(); it++)
-	{
-
-		Card card = it->second;
-
-		std::cout << loopCount << '.' << card.GetName() << ' ' << card.GetSex() << ' ' << card.GetId() << ' ' << card.GetSecurityCode() << '\n';
-
-		loopCount++;
-
-	}
-
-}
-
-const std::string DoorManager::GenerateSecurityCode(int numOfChar)
-{
-
-	std::string code;
-
-	for (int i = 0; i < numOfChar; i++)
-	{
-
-		code += char((rand() % (127 - 21)) + 21);
-
-	}
-
-
-	return code;
-
-}
-
-void DoorManager::AddCard(const std::string &name, int sex, int securityCodeLevel)
-{
-
-	std::string securityCode = GenerateSecurityCode(securityCodeLevel);
-
-	std::string cardPath = std::string("data/") + name + ".txt";
-
-	Card card(name, sex, m_nextId, GenerateSecurityCode(securityCodeLevel));	
-
-	m_cards[name] = card;
-
-	std::fstream file;
-
-	file.open("data/CardInfo.txt", std::ios::in | std::ios::app);
-
-	file << '\n' << name << ' ' << sex << ' ' << m_nextId <<  ' ' << securityCode;
-
-	file.close();
-
-	file.open(cardPath, std::ios::out | std::ios::trunc);
-
-	file << name << ' ' << sex << ' ' << m_nextId << ' ' << securityCode;
-
-	file.close();
-
-	m_nextId++;
-
-	SaveNextId();
-
-}
-
-void DoorManager::SetCard(const Card &card)
-{
-
-	for (auto it = m_cards.begin(); it != m_cards.end(); it++)
-	{
-
-		Card _card = it->second;
-
-		if (_card.GetId() == card.GetId())
-		{
-
-			_card = card;			
-
-		}
-
-	}
-
-}
-
-bool DoorManager::CheckCard(const std::string& cardPath)
-{
-
-	Card card;
-
-	ReadCardInfo(cardPath, card);
-	
-	bool result = (card == m_cards[card.GetName()]) ? true : false;
-
-	return result;
-
-}
-
-void DoorManager::SaveNextId()
-{
-
-	std::fstream file;
-
-	file.open("data/NextId.txt", std::ios::out);
-	
-	if (file.is_open())
-	{
-
-		file << m_nextId;
-
-	}
-	else
-	{
-
-		FILEOPENERROR("data/CardInfo/txt");
-
-	}
-
-	file.close();
-
-}
-
 void DoorManager::CopyFile(std::fstream &file, std::vector<std::string> &lines)
 {
 
@@ -285,6 +261,30 @@ void DoorManager::CopyCardInfoToFile()
 		file << name << ' ' << sex << ' ' << id << ' ' << securityCode << '\n';
 
 	}
+
+}
+
+void DoorManager::SaveNextId()
+{
+
+	std::fstream file;
+
+	file.open("data/NextId.txt", std::ios::out);
+	
+	if (file.is_open())
+	{
+
+		file << m_nextId;
+
+	}
+	else
+	{
+
+		FILEOPENERROR("data/CardInfo/txt");
+
+	}
+
+	file.close();
 
 }
 

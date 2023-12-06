@@ -12,30 +12,31 @@ public:
 	DoorManager();
 
 	void Init();
-
-	void ListCards();
+	
+private:
 
 	void AddCard(const std::string &name, int sex, int securityCodeLevel);
 
 	const std::string GenerateSecurityCode(int numOfChar);
-		
-private:
+
+	bool CheckCard(const std::string &cardPath);
+
+	void SetCard(const Card &card);
+
+	void ListCards();
 
 	void ReadNextId();
 
+	void ReadCardInfo(const std::string &cardPath, Card &card);
+	
 	void ReadCardInfo();
 
-	void ReadCardInfo(const std::string &cardPath, Card &card);
 
 	void CopyFile(std::fstream &file, std::vector<std::string> &lines);
 
 	void CopyToFile(std::fstream &file, const std::vector<std::string> &lines);
 
 	void CopyCardInfoToFile();
-
-	bool CheckCard(const std::string &cardPath);
-
-	void SetCard(const Card &card);
 
 	void SaveNextId();
 
