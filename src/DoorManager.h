@@ -19,6 +19,8 @@ private:
 
 	const std::string GenerateSecurityCode(int numOfChar);
 
+	void GetNextId();
+
 	bool CheckCard(const std::string &cardPath);
 
 	void SetCard(const Card &card);
@@ -30,7 +32,6 @@ private:
 	void ReadCardInfo(const std::string &cardPath, Card &card);
 	
 	void ReadCardInfo();
-
 
 	void CopyFile(std::fstream &file, std::vector<std::string> &lines);
 

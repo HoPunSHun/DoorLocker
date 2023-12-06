@@ -13,6 +13,10 @@ void DoorManager::Init()
 
 	ReadCardInfo();
 
+	GetNextId();
+
+	std::cout << m_nextId << '\n';
+
 }
 
 void DoorManager::AddCard(const std::string &name, int sex, int securityCodeLevel)
@@ -60,6 +64,48 @@ const std::string DoorManager::GenerateSecurityCode(int numOfChar)
 
 
 	return code;
+
+}
+
+void DoorManager::GetNextId()
+{
+
+	int *ids = new int[m_cards.size()];
+
+	int numOfCards = 0;
+
+	for (auto it = m_cards.begin(); it != m_cards.end(); it++)
+	{
+
+		ids[numOfCards] = it->second.GetId();
+
+		numOfCards++;
+
+	}
+
+	for (int i = m_cards.size() - 1; i > numOfCards; i--)
+	{
+
+		for (int j = 0; j < i; j++)
+		{
+
+			if (ids[j] > ids[j + 1])
+			{
+			
+				int tmp = ids[j];
+
+				ids[j] = ids[j + 1];
+				ids[j + 1] = tmp;
+
+			}
+
+		}
+
+	}
+
+	m_nextId = ++ids[numOfCards - 1];
+
+	delete []ids;
 
 }
 
