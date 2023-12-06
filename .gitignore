@@ -5,8 +5,6 @@ MakeFile~
 run.bat
 run.bat~
 DoorLocker/main.exe
-DoorLocker/data/CardInfo.txt
-DoorLocker/data/JeremyCard.txt
 
 #Multiple Files
 *.un~
@@ -15,3 +13,6 @@ DoorLocker/data/JeremyCard.txt
 *.h~
 *.un~
 *.swp
+
+#Folders
+DoorLocker/data

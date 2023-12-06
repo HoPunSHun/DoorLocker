@@ -14,7 +14,7 @@ void DoorManager::Init()
 
 	ReadCardInfo();
 
-	std::cout << CheckCard("data/JeremyCard.txt") << '\n';
+	std::cout << CheckCard("data/Jeremy.txt") << '\n';
 
 }
 
@@ -147,6 +147,8 @@ void DoorManager::AddCard(const std::string &name, int sex, int securityCodeLeve
 
 	std::string securityCode = GenerateSecurityCode(securityCodeLevel);
 
+	std::string cardPath = std::string("data/") + name + ".txt";
+
 	Card card(name, sex, m_nextId, GenerateSecurityCode(securityCodeLevel));	
 
 	m_cards.push_back(card);
@@ -155,7 +157,15 @@ void DoorManager::AddCard(const std::string &name, int sex, int securityCodeLeve
 
 	file.open("data/CardInfo.txt", std::ios::in | std::ios::app);
 
-	file << '\n' << name << ' ' << sex << ' ' << securityCode;
+	file << '\n' << name << ' ' << sex << ' ' << m_nextId <<  ' ' << securityCode;
+
+	file.close();
+
+	file.open(cardPath, std::ios::out | std::ios::trunc);
+
+	file << name << ' ' << sex << ' ' << m_nextId << ' ' << securityCode;
+
+	file.close();
 
 	m_nextId++;
 
