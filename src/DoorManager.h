@@ -18,6 +18,7 @@ private:
 	void OpenDoorWithCard(const std::string &cardName);
 
 	void AddCard(const std::string &name, int sex, int securityCodeLevel);
+	void RemoveCard(const std::string &name);
 
 	const std::string GenerateSecurityCode(int numOfChar);
 
@@ -28,6 +29,7 @@ private:
 	void SetCard(const Card &card);
 
 	void ListCards();
+	void ListDoorOpenHistory();
 
 	void ReadDoorOpenHistory();
 
@@ -43,7 +45,7 @@ private:
 
 	void CopyToFile(std::fstream &file, const std::vector<std::string> &lines);
 
-	void CopyCardInfoToFile();
+	void SaveCardInfoToFile();
 
 	void SaveNextId();
 

@@ -78,6 +78,15 @@ void DoorManager::AddCard(const std::string &name, int sex, int securityCodeLeve
 
 }
 
+void DoorManager::RemoveCard(const std::string &name)
+{
+
+	m_cards.erase(name);	
+
+	SaveCardInfoToFile();	
+
+}
+
 const std::string DoorManager::GenerateSecurityCode(int numOfChar)
 {
 
@@ -323,7 +332,7 @@ void DoorManager::CopyToFile(std::fstream &file, const std::vector<std::string> 
 
 }
 
-void DoorManager::CopyCardInfoToFile()
+void DoorManager::SaveCardInfoToFile()
 {
 
 	std::fstream file;
