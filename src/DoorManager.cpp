@@ -12,8 +12,10 @@ void DoorManager::Init()
 {
 
 	ReadCardInfo();
+	ReadDoorOpenHistory();
 
-	AddCard("Jeremy", 1, 5);
+	ListDoorOpenHistory();
+
 
 }
 
@@ -192,13 +194,36 @@ void DoorManager::ListCards()
 
 }
 
+void DoorManager::ListDoorOpenHistory()
+{
+
+	for (const auto &history : m_doorOpenHistory)
+	{
+
+		std::cout << history << '\n';
+
+	}
+
+}
+
 void DoorManager::ReadDoorOpenHistory()
 {
 
 	std::fstream file;
 	file.open("data/DoorOpenHistory.txt", std::ios::in);
 
-	CopyFile(file, m_doorOpenHistory);	
+	if (file.is_open())
+	{
+
+		CopyFile(file, m_doorOpenHistory);	
+	
+	}
+	else
+	{
+
+		FILEOPENERROR("data/DoorOpenHistory.txt");
+
+	}
 
 	file.close();
 
