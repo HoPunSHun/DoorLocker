@@ -13,40 +13,68 @@ void DoorManager::Init()
 
 	ReadCardInfo();
 
-	GetNextId();
+	AddCard("Jeremy", 1, 5);
 
-	std::cout << m_nextId << '\n';
+}
+
+void DoorManager::OpenDoorWithCard(const std::string &cardName)
+{
+
+	Card card;
+
+	ReadCardInfo("data/" + cardName + ".txt", card);
+
+	if (CheckCard(card))
+	{
+
+		SaveDoorOpenHistory(card);
+
+		std::cout << "Welcome. Door opened successfully" << '\n';	
+
+	}
+	else
+	{
+
+		std::cout << "Unable to open. Unregister card" << '\n';
+
+	}
 
 }
 
 void DoorManager::AddCard(const std::string &name, int sex, int securityCodeLevel)
 {
 
-	std::string securityCode = GenerateSecurityCode(securityCodeLevel);
+	if (m_cards.find(name) == m_cards.end())
+	{
 
-	std::string cardPath = std::string("data/") + name + ".txt";
+		std::string securityCode = GenerateSecurityCode(securityCodeLevel);
 
-	Card card(name, sex, m_nextId, GenerateSecurityCode(securityCodeLevel));	
+		std::string cardPath = "data/" + name + ".txt";
 
-	m_cards[name] = card;
+		Card card(name, sex, m_nextId, GenerateSecurityCode(securityCodeLevel));	
 
-	std::fstream file;
+		m_cards[name] = card;
 
-	file.open("data/CardInfo.txt", std::ios::in | std::ios::app);
+		std::fstream file;
+		file.open("data/CardInfo.txt", std::ios::in | std::ios::app);
 
-	file << '\n' << name << ' ' << sex << ' ' << m_nextId <<  ' ' << securityCode;
+		file << '\n' << name << ' ' << sex << ' ' << m_nextId <<  ' ' << securityCode;
+		file.close();
 
-	file.close();
+		file.open(cardPath, std::ios::out | std::ios::trunc);
 
-	file.open(cardPath, std::ios::out | std::ios::trunc);
+		file << name << ' ' << sex << ' ' << m_nextId << ' ' << securityCode;
+		file.close();
 
-	file << name << ' ' << sex << ' ' << m_nextId << ' ' << securityCode;
+		m_nextId++;	
 
-	file.close();
+	}
+	else
+	{
 
-	m_nextId++;
+		std::cout << "Card already exist" << '\n';
 
-	SaveNextId();
+	}
 
 }
 
@@ -109,12 +137,8 @@ void DoorManager::GetNextId()
 
 }
 
-bool DoorManager::CheckCard(const std::string& cardPath)
+bool DoorManager::CheckCard(const Card &card)
 {
-
-	Card card;
-
-	ReadCardInfo(cardPath, card);
 	
 	bool result = (card == m_cards[card.GetName()]) ? true : false;
 
@@ -159,25 +183,13 @@ void DoorManager::ListCards()
 
 }
 
-void DoorManager::ReadNextId()
+void DoorManager::ReadDoorOpenHistory()
 {
 
 	std::fstream file;
+	file.open("data/DoorOpenHistory.txt", std::ios::in);
 
-	file.open("data/NextId.txt", std::ios::in);
-
-	if (file.is_open())
-	{
-
-		file >> m_nextId;	
-
-	}
-	else
-	{
-
-		FILEOPENERROR("data/NextId.txt");
-
-	}
+	CopyFile(file, m_doorOpenHistory);	
 
 	file.close();
 
@@ -247,6 +259,31 @@ void DoorManager::ReadCardInfo()
 	{
 
 		FILEOPENERROR("data/CardInfo.txt");
+
+	}
+
+}
+
+void DoorManager::SaveDoorOpenHistory(const Card &card)
+{
+
+	std::fstream file;
+	file.open("data/DoorOpenHistory.txt", std::ios::app);
+
+	if (file.is_open())
+	{
+
+		std::string newHistory = "Card " + card.GetName() + '\n';
+
+		file << newHistory << '\n';
+		m_doorOpenHistory.push_back(newHistory);
+
+	}
+	else
+	{
+
+		FILEOPENERROR("data/DoorOpenHistory.txt");
+		std::cout << "Saving cancelled" << '\n';
 
 	}
 

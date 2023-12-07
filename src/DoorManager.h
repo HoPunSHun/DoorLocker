@@ -15,23 +15,29 @@ public:
 	
 private:
 
+	void OpenDoorWithCard(const std::string &cardName);
+
 	void AddCard(const std::string &name, int sex, int securityCodeLevel);
 
 	const std::string GenerateSecurityCode(int numOfChar);
 
 	void GetNextId();
 
-	bool CheckCard(const std::string &cardPath);
+	bool CheckCard(const Card &card);
 
 	void SetCard(const Card &card);
 
 	void ListCards();
+
+	void ReadDoorOpenHistory();
 
 	void ReadNextId();
 
 	void ReadCardInfo(const std::string &cardPath, Card &card);
 	
 	void ReadCardInfo();
+
+	void SaveDoorOpenHistory(const Card &card);
 
 	void CopyFile(std::fstream &file, std::vector<std::string> &lines);
 
@@ -50,5 +56,8 @@ private:
 	int m_nextId;
 
 	std::map<std::string, Card> m_cards;
+
+
+	std::vector<std::string> m_doorOpenHistory;
 
 };
