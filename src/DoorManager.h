@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "Card.h"
+#include "History.h"
 
 class DoorManager
 {
@@ -42,10 +43,6 @@ private:
 
 	void SaveDoorOpenHistory();
 
-	void CopyFile(std::fstream &file, std::vector<std::string> &lines);
-
-	void CopyToFile(std::fstream &file, const std::vector<std::string> &lines);
-
 	void SaveCardInfoToFile();
 
 	void SaveNextId();
@@ -60,7 +57,6 @@ private:
 
 	std::map<std::string, Card> m_cards;
 
-
-	std::vector<std::string> m_doorOpenHistory;
+	std::vector<History> m_doorOpenHistory;
 
 };
