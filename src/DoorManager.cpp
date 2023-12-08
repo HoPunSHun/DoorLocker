@@ -13,9 +13,10 @@ void DoorManager::Init()
 
 	ReadCardInfo();
 	ReadDoorOpenHistory();
+	
+	OpenDoorWithCard("Jeremy");
 
 	ListDoorOpenHistory();
-
 
 }
 
@@ -29,7 +30,7 @@ void DoorManager::OpenDoorWithCard(const std::string &cardName)
 	if (CheckCard(card))
 	{
 
-		SaveDoorOpenHistory(card);
+		UpdateDoorOpenHistory(card);
 
 		std::cout << "Welcome. Door opened successfully" << '\n';	
 
@@ -40,6 +41,15 @@ void DoorManager::OpenDoorWithCard(const std::string &cardName)
 		std::cout << "Unable to open. Unregister card" << '\n';
 
 	}
+
+}
+
+void DoorManager::UpdateDoorOpenHistory(const Card &card)
+{
+
+	std::string newHistory = "Card " + card.GetName();
+
+	m_doorOpenHistory.push_back(newHistory);
 
 }
 
@@ -215,8 +225,8 @@ void DoorManager::ReadDoorOpenHistory()
 	if (file.is_open())
 	{
 
-		CopyFile(file, m_doorOpenHistory);	
-	
+		CopyFile(file, m_doorOpenHistory);
+
 	}
 	else
 	{
@@ -298,31 +308,6 @@ void DoorManager::ReadCardInfo()
 
 }
 
-void DoorManager::SaveDoorOpenHistory(const Card &card)
-{
-
-	std::fstream file;
-	file.open("data/DoorOpenHistory.txt", std::ios::app);
-
-	if (file.is_open())
-	{
-
-		std::string newHistory = "Card " + card.GetName() + '\n';
-
-		file << newHistory << '\n';
-		m_doorOpenHistory.push_back(newHistory);
-
-	}
-	else
-	{
-
-		FILEOPENERROR("data/DoorOpenHistory.txt");
-		std::cout << "Saving cancelled" << '\n';
-
-	}
-
-}
-
 void DoorManager::CopyFile(std::fstream &file, std::vector<std::string> &lines)
 {
 
@@ -352,6 +337,27 @@ void DoorManager::CopyToFile(std::fstream &file, const std::vector<std::string> 
 	{
 
 		file << line << '\n';
+
+	}
+
+}
+
+void DoorManager::SaveDoorOpenHistory()
+{
+
+	std::fstream file;
+	file.open("data/DoorOpenHistory.txt", std::ios::out | std::ios::trunc);
+
+	if (file.is_open())
+	{
+
+		
+
+	}
+	else
+	{
+
+		FILEOPENERROR("data/DoorOpenHistory.txt");
 
 	}
 
@@ -391,7 +397,7 @@ void DoorManager::SaveNextId()
 	if (file.is_open())
 	{
 
-		file << m_nextId;
+		CopyToFile(file, m_doorOpenHistory);
 
 	}
 	else

@@ -16,6 +16,7 @@ public:
 private:
 
 	void OpenDoorWithCard(const std::string &cardName);
+	void UpdateDoorOpenHistory(const Card &card);
 
 	void AddCard(const std::string &name, int sex, int securityCodeLevel);
 	void RemoveCard(const std::string &name);
@@ -39,7 +40,7 @@ private:
 	
 	void ReadCardInfo();
 
-	void SaveDoorOpenHistory(const Card &card);
+	void SaveDoorOpenHistory();
 
 	void CopyFile(std::fstream &file, std::vector<std::string> &lines);
 
