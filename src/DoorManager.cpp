@@ -14,7 +14,12 @@ void DoorManager::Init()
 	ReadCardInfo();
 	ReadDoorOpenHistory();
 
+	OpenDoorWithCard("Jeremy");
+	OpenDoorWithCard("Johnson");
+
 	ListDoorOpenHistory();
+
+	SaveDoorOpenHistory();
 
 }
 
@@ -23,7 +28,9 @@ void DoorManager::OpenDoorWithCard(const std::string &cardName)
 
 	Card card;
 
-	ReadCardInfo("data/" + cardName + ".txt", card);
+	std::string cardPath = "data/" + cardName + ".txt";
+
+	ReadCardInfo(cardPath, card);
 
 	if (CheckCard(card))
 	{
@@ -45,6 +52,13 @@ void DoorManager::OpenDoorWithCard(const std::string &cardName)
 void DoorManager::UpdateDoorOpenHistory(const Card &card)
 {
 
+	int time_h = 13;
+	int time_m = 56;
+
+	History newHistory(card.GetName(), time_h, time_m);
+
+	m_doorOpenHistory.push_back(newHistory);
+
 }
 
 void DoorManager::AddCard(const std::string &name, int sex, int securityCodeLevel)
@@ -60,17 +74,6 @@ void DoorManager::AddCard(const std::string &name, int sex, int securityCodeLeve
 		Card card(name, sex, m_nextId, GenerateSecurityCode(securityCodeLevel));	
 
 		m_cards[name] = card;
-
-		std::fstream file;
-		file.open("data/CardInfo.txt", std::ios::in | std::ios::app);
-
-		file << '\n' << name << ' ' << sex << ' ' << m_nextId <<  ' ' << securityCode;
-		file.close();
-
-		file.open(cardPath, std::ios::out | std::ios::trunc);
-
-		file << name << ' ' << sex << ' ' << m_nextId << ' ' << securityCode;
-		file.close();
 
 		m_nextId++;	
 
@@ -200,17 +203,7 @@ void DoorManager::ListDoorOpenHistory()
 	for (const auto &history : m_doorOpenHistory)
 	{
 
-		std::string type = history.GetType();
-		std::string output = type + ' ' + history.GetTime();
-
-		if (type == "Card")
-		{
-
-			output += ' ' + history.GetCardName();	
-
-		}
-
-		std::cout << output << '\n';
+		std::cout << history.GetName() << ' ' << history.GetTime() << '\n';
 
 	}
 
@@ -233,18 +226,12 @@ void DoorManager::ReadDoorOpenHistory()
 			std::string type;
 			int time_h, time_m;
 
-			file >> type >> time_h >> time_m;
+			file >> type >> time_h >> time_m;	
 
-			if (type == "Card")
+			if (type != "Password")
 			{
 
-				std::string cardName;
-
-				file >> cardName;
-
-				history = History(cardName, time_h, time_m);
-
-				m_doorOpenHistory.push_back(history);
+				history = History(type, time_h, time_m);
 
 			}
 			else
@@ -252,9 +239,9 @@ void DoorManager::ReadDoorOpenHistory()
 
 				history = History(time_h, time_m);
 
-				m_doorOpenHistory.push_back(history);
-
 			}
+
+			m_doorOpenHistory.push_back(history);
 	
 		}		
 	
@@ -347,6 +334,13 @@ void DoorManager::SaveDoorOpenHistory()
 
 	if (file.is_open())
 	{
+
+		for (const auto& history : m_doorOpenHistory)
+		{
+
+			file << history.GetName() << ' ' << history.GetHour() << ' ' << history.GetMinute() << '\n';
+			
+		}
 
 	}
 	else
