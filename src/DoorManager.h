@@ -43,9 +43,12 @@ private:
 
 	void SaveDoorOpenHistory();
 
-	void SaveCardInfoToFile();
+	void SaveCardInfo();
 
 	void SaveNextId();
+
+	void CreateFile(const std::string &filePath);
+	void CreateFileAndWrite(const std::string &filePath, const std::string &line);
 
 	void FILEOPENERROR(const std::string &fileName);
 

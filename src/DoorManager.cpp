@@ -12,13 +12,12 @@ void DoorManager::Init()
 {
 
 	ReadCardInfo();
-	ReadDoorOpenHistory();
-
-	OpenDoorWithCard("Jeremy");
+	ReadDoorOpenHistory();	
 
 	ListDoorOpenHistory();
 
 	SaveDoorOpenHistory();
+	SaveCardInfo();
 
 }
 
@@ -70,9 +69,11 @@ void DoorManager::AddCard(const std::string &name, int sex, int securityCodeLeve
 
 		std::string cardPath = "data/" + name + ".txt";
 
-		Card card(name, sex, m_nextId, GenerateSecurityCode(securityCodeLevel));	
+		Card card(name, sex, m_nextId, securityCode);	
 
 		m_cards[name] = card;
+
+		CreateFileAndWrite(cardPath, name + ' ' + std::to_string(sex) + ' ' + std::to_string(m_nextId) + ' ' + securityCode);
 
 		m_nextId++;	
 
@@ -90,8 +91,6 @@ void DoorManager::RemoveCard(const std::string &name)
 {
 
 	m_cards.erase(name);	
-
-	SaveCardInfoToFile();	
 
 }
 
@@ -249,7 +248,7 @@ void DoorManager::ReadDoorOpenHistory()
 	else
 	{
 
-		FILEOPENERROR("data/DoorOpenHistory.txt");
+		CreateFile("data/DoorOpenHistory.txt");
 
 	}
 
@@ -320,7 +319,7 @@ void DoorManager::ReadCardInfo()
 	else
 	{
 
-		FILEOPENERROR("data/CardInfo.txt");
+		CreateFile("data/CardInfo.txt");
 
 	}
 
@@ -352,27 +351,54 @@ void DoorManager::SaveDoorOpenHistory()
 
 }
 
-void DoorManager::SaveCardInfoToFile()
+void DoorManager::SaveCardInfo()
 {
 
 	std::fstream file;
 
 	file.open("data/CardInfo.txt", std::ios::out | std::ios::trunc);
 
-	for (auto it = m_cards.begin(); it != m_cards.end(); it++)
+	if (file.is_open())
 	{
+		
+		for (auto it = m_cards.begin(); it != m_cards.end(); it++)
+		{
 
-		Card _card = it->second;
+			Card _card = it->second;
 
-		std::string name = _card.GetName();
-		std::string securityCode = _card.GetSecurityCode();
+			std::string name = _card.GetName();
+			std::string securityCode = _card.GetSecurityCode();
 
-		int sex = _card.GetSex();
-		int id = _card.GetId();
+			int sex = _card.GetSex();
+			int id = _card.GetId();
 
-		file << name << ' ' << sex << ' ' << id << ' ' << securityCode << '\n';
+			file << name << ' ' << sex << ' ' << id << ' ' << securityCode << '\n';
+
+		}
+	
 
 	}
+
+	file.close();
+
+}
+
+void DoorManager::CreateFile(const std::string &filePath)
+{
+
+	std::fstream file;
+	file.open(filePath, std::ios::out);
+	file.close();
+
+}
+
+void DoorManager::CreateFileAndWrite(const std::string &filePath, const std::string &line)
+{
+
+	std::fstream file;
+	file.open(filePath, std::ios::out);
+	file << line;
+	file.close();
 
 }
 
