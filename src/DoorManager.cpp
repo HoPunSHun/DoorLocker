@@ -15,7 +15,6 @@ void DoorManager::Init()
 	ReadDoorOpenHistory();
 
 	OpenDoorWithCard("Jeremy");
-	OpenDoorWithCard("Johnson");
 
 	ListDoorOpenHistory();
 
@@ -218,15 +217,16 @@ void DoorManager::ReadDoorOpenHistory()
 	if (file.is_open())
 	{
 
-		while (file.good())
+		std::string type;
+
+		while (file >> type)
 		{
 
 			History history;
 
-			std::string type;
 			int time_h, time_m;
 
-			file >> type >> time_h >> time_m;	
+			file >> time_h >> time_m;	
 
 			if (type != "Password")
 			{
