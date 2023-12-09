@@ -54,8 +54,6 @@ private:
 
 private:
 
-	int m_numOfCards;
-
 	int m_nextId;
 
 	std::map<std::string, Card> m_cards;

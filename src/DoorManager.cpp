@@ -295,8 +295,6 @@ void DoorManager::ReadCardInfo()
 
 	if (file.is_open())
 	{
-
-		m_numOfCards = 0;
 	
 		std::string name;
 
@@ -310,8 +308,6 @@ void DoorManager::ReadCardInfo()
 			file >> sex >> id >> securityCode;	
 
 			m_cards[name] = Card(name, sex, id, securityCode);
-
-			m_numOfCards++;
 
 		}
 
