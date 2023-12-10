@@ -20,17 +20,13 @@ private:
 	void UpdateDoorOpenHistory(const Card &card);
 
 	void AddCard(const std::string &name, int sex, int securityCodeLevel);
-	void RemoveCard(const std::string &name);
-
-	const std::string GenerateSecurityCode(int numOfChar);
-
-	void GetNextId();
-
+	void RemoveCard(const int id);
 	bool CheckCard(const Card &card);
-
 	void SetCard(const Card &card);
 
-	void ListCards();
+	const std::string GenerateSecurityCode(int numOfChar);
+	
+	void ListCardInfo();
 	void ListDoorOpenHistory();
 
 	void ReadDoorOpenHistory();
@@ -50,14 +46,19 @@ private:
 	void CreateFile(const std::string &filePath);
 	void CreateFileAndWrite(const std::string &filePath, const std::string &line);
 
+	bool CheckSameCardName(const std::string &cardName);
+
 	void FILEOPENERROR(const std::string &fileName);
 
 private:
 
 	int m_nextId;
 
-	std::map<std::string, Card> m_cards;
+	std::map<int, Card> m_cards;
 
 	std::vector<History> m_doorOpenHistory;
+
+	bool m_cardInfoChanged = false;
+	bool m_doorOpenHistoryChanged = false;
 
 };

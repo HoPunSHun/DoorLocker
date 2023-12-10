@@ -13,11 +13,22 @@ void DoorManager::Init()
 
 	ReadCardInfo();
 	ReadDoorOpenHistory();	
+	
+	if (m_doorOpenHistoryChanged) 
+	{ 
 
-	ListDoorOpenHistory();
+		std::cout << "Saving Door Open Histories" << '\n';		
+		SaveDoorOpenHistory(); 
+	
+	}
 
-	SaveDoorOpenHistory();
-	SaveCardInfo();
+	if (m_cardInfoChanged)	
+	{ 
+		
+		std::cout << "Saving Card Informations" << '\n';
+		SaveCardInfo(); 
+	
+	}
 
 }
 
@@ -36,6 +47,8 @@ void DoorManager::OpenDoorWithCard(const std::string &cardName)
 		UpdateDoorOpenHistory(card);
 
 		std::cout << "Welcome. Door opened successfully" << '\n';	
+
+		m_doorOpenHistoryChanged = true;
 
 	}
 	else
@@ -62,7 +75,7 @@ void DoorManager::UpdateDoorOpenHistory(const Card &card)
 void DoorManager::AddCard(const std::string &name, int sex, int securityCodeLevel)
 {
 
-	if (m_cards.find(name) == m_cards.end())
+	if (!CheckSameCardName(name))
 	{
 
 		std::string securityCode = GenerateSecurityCode(securityCodeLevel);
@@ -71,11 +84,13 @@ void DoorManager::AddCard(const std::string &name, int sex, int securityCodeLeve
 
 		Card card(name, sex, m_nextId, securityCode);	
 
-		m_cards[name] = card;
+		m_cards[m_nextId] = card;
 
 		CreateFileAndWrite(cardPath, name + ' ' + std::to_string(sex) + ' ' + std::to_string(m_nextId) + ' ' + securityCode);
 
 		m_nextId++;	
+
+		m_cardInfoChanged = true;
 
 	}
 	else
@@ -87,10 +102,26 @@ void DoorManager::AddCard(const std::string &name, int sex, int securityCodeLeve
 
 }
 
-void DoorManager::RemoveCard(const std::string &name)
+void DoorManager::RemoveCard(const int id)
 {
 
-	m_cards.erase(name);	
+	m_cards.erase(id);	
+
+	m_cardInfoChanged = true;
+
+}
+
+bool DoorManager::CheckCard(const Card &card)
+{
+	
+	bool result = (card == m_cards[card.GetId()]) ? true : false;
+
+	return result;
+
+}
+
+void DoorManager::SetCard(const Card &card)
+{
 
 }
 
@@ -111,73 +142,7 @@ const std::string DoorManager::GenerateSecurityCode(int numOfChar)
 
 }
 
-void DoorManager::GetNextId()
-{
-
-	int *ids = new int[m_cards.size()];
-
-	int numOfCards = 0;
-
-	for (auto it = m_cards.begin(); it != m_cards.end(); it++)
-	{
-
-		ids[numOfCards] = it->second.GetId();
-
-		numOfCards++;
-
-	}
-
-	for (int j = 0; j < m_cards.size() - 1; j++)
-	{
-
-		if (ids[j] > ids[j + 1])
-		{
-			
-			int tmp = ids[j];
-
-			ids[j] = ids[j + 1];
-			ids[j + 1] = tmp;
-
-		}
-
-	}
-
-
-	m_nextId = ++ids[numOfCards - 1];
-
-	delete []ids;
-
-}
-
-bool DoorManager::CheckCard(const Card &card)
-{
-	
-	bool result = (card == m_cards[card.GetName()]) ? true : false;
-
-	return result;
-
-}
-
-void DoorManager::SetCard(const Card &card)
-{
-
-	for (auto it = m_cards.begin(); it != m_cards.end(); it++)
-	{
-
-		Card _card = it->second;
-
-		if (_card.GetId() == card.GetId())
-		{
-
-			_card = card;			
-
-		}
-
-	}
-
-}
-
-void DoorManager::ListCards()
+void DoorManager::ListCardInfo()
 {
 
 	int loopCount = 1;
@@ -295,7 +260,9 @@ void DoorManager::ReadCardInfo()
 
 	if (file.is_open())
 	{
-	
+
+		file >> m_nextId;
+
 		std::string name;
 
 		while (file >> name)
@@ -307,7 +274,7 @@ void DoorManager::ReadCardInfo()
 
 			file >> sex >> id >> securityCode;	
 
-			m_cards[name] = Card(name, sex, id, securityCode);
+			m_cards[id] = Card(name, sex, id, securityCode);
 
 		}
 
@@ -356,7 +323,9 @@ void DoorManager::SaveCardInfo()
 
 	if (file.is_open())
 	{
-		
+	
+		file << m_nextId << '\n';
+
 		for (auto it = m_cards.begin(); it != m_cards.end(); it++)
 		{
 
@@ -395,6 +364,25 @@ void DoorManager::CreateFileAndWrite(const std::string &filePath, const std::str
 	file.open(filePath, std::ios::out);
 	file << line;
 	file.close();
+
+}
+
+bool DoorManager::CheckSameCardName(const std::string &cardName)
+{
+
+	for (auto it = m_cards.begin(); it != m_cards.end(); it++)
+	{
+
+		if (it->second.GetName() == cardName)
+		{
+
+			return true;
+
+		}
+
+	}
+
+	return false;
 
 }
 

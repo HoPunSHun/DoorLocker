@@ -42,7 +42,23 @@ public:
 
 		return m_securityCode;
 
+	}	
+
+	bool operator==(const Card& other) const
+	{
+
+		return  (
+			
+			m_name == other.GetName() &&
+			m_sex == other.GetSex() &&
+			m_id == other.GetId() &&
+			m_securityCode == other.GetSecurityCode()	
+				
+			);
+	
 	}
+
+private:
 
 	void SetName(const std::string &name)
 	{
@@ -58,19 +74,14 @@ public:
 
 	}
 
-	bool operator==(const Card& other) const
+	void SetSecurityCode(const std::string &securityCode)
 	{
 
-		return  (
-			
-			m_name == other.GetName() &&
-			m_sex == other.GetSex() &&
-			m_id == other.GetId() &&
-			m_securityCode == other.GetSecurityCode()	
-				
-			);
-	
+		m_securityCode = securityCode;
+
 	}
+
+	friend class DoorManager;
 
 private:
 
