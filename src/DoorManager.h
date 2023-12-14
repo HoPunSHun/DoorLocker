@@ -23,7 +23,9 @@ private:
 	void RemoveCard(const int id);
 	void RemoveCard(const std::string &cardName);
 	bool CheckCard(const Card &card);
-	void SetCard(const Card &card);
+
+	void SetCard(const std::string &cardName, const Card &card);
+	void SetCard(int id, const Card &card);
 
 	const std::string GenerateSecurityCode(int numOfChar);
 	

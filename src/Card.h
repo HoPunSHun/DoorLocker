@@ -16,6 +16,13 @@ public:
 			m_securityCode	(securityCode)
 	{}
 
+	Card(const std::string &name, int sex, const std::string &securityCode)
+		:	m_name		(name),
+			m_sex		(sex),
+			m_id		(-1),
+			m_securityCode	(securityCode)
+	{}
+
 	const std::string &GetName() const
 	{
 
@@ -57,6 +64,16 @@ public:
 			);
 	
 	}
+
+	void SetAs(const Card &other)
+	{
+
+		SetName(other.GetName());
+		SetSex(other.GetSex());
+		SetSecurityCode(other.GetSecurityCode());
+
+	}
+
 
 private:
 

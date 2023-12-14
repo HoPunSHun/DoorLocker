@@ -13,7 +13,7 @@ void DoorManager::Init()
 
 	ReadCardInfo();
 	ReadDoorOpenHistory();	
-	
+
 	if (m_doorOpenHistoryChanged) 
 	{ 
 
@@ -132,8 +132,45 @@ bool DoorManager::CheckCard(const Card &card)
 
 }
 
-void DoorManager::SetCard(const Card &card)
+void DoorManager::SetCard(const std::string &cardName, const Card &_card)
 {
+
+	if (m_cardsName.find(cardName) != m_cardsName.end())
+	{
+
+		m_cardsName[cardName].SetAs(_card);
+		m_cardsId[m_cardsName[cardName].GetId()].SetAs(_card);
+
+	}
+	else
+	{
+
+		std::cout << "Card doesn't exist" << '\n';
+
+	}
+
+	m_cardInfoChanged = true;
+
+}
+
+void DoorManager::SetCard(int id, const Card &_card)
+{
+
+	if (m_cardsId.find(id) != m_cardsId.end())
+	{
+
+		m_cardsId[id].SetAs(_card);
+		m_cardsName[m_cardsId[id].GetName()].SetAs(_card);
+
+	}
+	else
+	{
+
+		std::cout << "Card doesn't exist" << '\n';
+
+	}
+
+	m_cardInfoChanged = true;
 
 }
 
