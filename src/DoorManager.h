@@ -21,6 +21,7 @@ private:
 
 	void AddCard(const std::string &name, int sex, int securityCodeLevel);
 	void RemoveCard(const int id);
+	void RemoveCard(const std::string &cardName);
 	bool CheckCard(const Card &card);
 	void SetCard(const Card &card);
 
@@ -54,7 +55,8 @@ private:
 
 	int m_nextId;
 
-	std::map<int, Card> m_cards;
+	std::map<int, Card> m_cardsId;
+	std::map<std::string, Card> m_cardsName;
 
 	std::vector<History> m_doorOpenHistory;
 

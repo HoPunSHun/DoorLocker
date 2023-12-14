@@ -84,7 +84,8 @@ void DoorManager::AddCard(const std::string &name, int sex, int securityCodeLeve
 
 		Card card(name, sex, m_nextId, securityCode);	
 
-		m_cards[m_nextId] = card;
+		m_cardsId[m_nextId] = card;
+		m_cardsName[name] = card;
 
 		CreateFileAndWrite(cardPath, name + ' ' + std::to_string(sex) + ' ' + std::to_string(m_nextId) + ' ' + securityCode);
 
@@ -105,7 +106,18 @@ void DoorManager::AddCard(const std::string &name, int sex, int securityCodeLeve
 void DoorManager::RemoveCard(const int id)
 {
 
-	m_cards.erase(id);	
+	m_cardsName.erase(m_cardsId[id].GetName());
+	m_cardsId.erase(id);	
+
+	m_cardInfoChanged = true;
+
+}
+
+void DoorManager::RemoveCard(const std::string &cardName)
+{
+
+	m_cardsId.erase(m_cardsName[cardName].GetId());
+	m_cardsName.erase(cardName);
 
 	m_cardInfoChanged = true;
 
@@ -114,7 +126,7 @@ void DoorManager::RemoveCard(const int id)
 bool DoorManager::CheckCard(const Card &card)
 {
 	
-	bool result = (card == m_cards[card.GetId()]) ? true : false;
+	bool result = (card == m_cardsId[card.GetId()]) ? true : false;
 
 	return result;
 
@@ -147,7 +159,7 @@ void DoorManager::ListCardInfo()
 
 	int loopCount = 1;
 
-	for (auto it = m_cards.begin(); it != m_cards.end(); it++)
+	for (auto it = m_cardsId.begin(); it != m_cardsId.end(); it++)
 	{
 
 		Card card = it->second;
@@ -274,7 +286,10 @@ void DoorManager::ReadCardInfo()
 
 			file >> sex >> id >> securityCode;	
 
-			m_cards[id] = Card(name, sex, id, securityCode);
+			Card card(name, sex, id, securityCode);
+
+			m_cardsId[id] = card;
+			m_cardsName[name] = card;
 
 		}
 
@@ -282,7 +297,7 @@ void DoorManager::ReadCardInfo()
 	else
 	{
 
-		CreateFile("data/CardInfo.txt");
+		CreateFileAndWrite("data/CardInfo.txt", "0");
 
 	}
 
@@ -326,7 +341,7 @@ void DoorManager::SaveCardInfo()
 	
 		file << m_nextId << '\n';
 
-		for (auto it = m_cards.begin(); it != m_cards.end(); it++)
+		for (auto it = m_cardsId.begin(); it != m_cardsId.end(); it++)
 		{
 
 			Card _card = it->second;
@@ -370,15 +385,10 @@ void DoorManager::CreateFileAndWrite(const std::string &filePath, const std::str
 bool DoorManager::CheckSameCardName(const std::string &cardName)
 {
 
-	for (auto it = m_cards.begin(); it != m_cards.end(); it++)
+	if (m_cardsName.find(cardName) != m_cardsName.end())
 	{
 
-		if (it->second.GetName() == cardName)
-		{
-
-			return true;
-
-		}
+		return true;
 
 	}
 
