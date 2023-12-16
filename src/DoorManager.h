@@ -19,7 +19,9 @@ public:
 private:
 
 	void OpenDoorWithCard(const std::string &cardName);
+	void OpenDoorWithPassword(const std::string &password);
 	void UpdateDoorOpenHistory(const Card &card);
+	void UpdateDoorOpenHistory();
 
 	void SetPassword(const std::string &password);
 

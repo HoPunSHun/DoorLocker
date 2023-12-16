@@ -15,6 +15,11 @@ void DoorManager::Init()
 	ReadCardInfo();
 	ReadDoorOpenHistory();	
 
+	SetPassword("45313");
+
+	OpenDoorWithPassword("45313");
+	OpenDoorWithPassword("12345");
+
 	if (m_doorOpenHistoryChanged) 
 	{ 
 
@@ -61,6 +66,27 @@ void DoorManager::OpenDoorWithCard(const std::string &cardName)
 
 }
 
+void DoorManager::OpenDoorWithPassword(const std::string &password)
+{
+
+	if (password == m_password)
+	{
+
+		std::cout << "Welcome. Door opened successfully" << '\n';	
+		UpdateDoorOpenHistory();
+
+		m_doorOpenHistoryChanged = true;
+
+	}
+	else
+	{
+
+		std::cout << "Password incorrect" << '\n';
+
+	}
+
+}
+
 void DoorManager::UpdateDoorOpenHistory(const Card &card)
 {
 
@@ -68,6 +94,18 @@ void DoorManager::UpdateDoorOpenHistory(const Card &card)
 	int time_m = 56;
 
 	History newHistory(card.GetName(), time_h, time_m);
+
+	m_doorOpenHistory.push_back(newHistory);
+
+}
+
+void DoorManager::UpdateDoorOpenHistory()
+{
+
+	int time_h = 13;
+	int time_m = 56;
+
+	History newHistory(time_h, time_m);
 
 	m_doorOpenHistory.push_back(newHistory);
 
