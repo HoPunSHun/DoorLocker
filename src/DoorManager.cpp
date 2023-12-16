@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <fstream>
+#include <cmath>
 
 DoorManager::DoorManager()
 	:	m_nextId	(0)
@@ -69,6 +70,41 @@ void DoorManager::UpdateDoorOpenHistory(const Card &card)
 	History newHistory(card.GetName(), time_h, time_m);
 
 	m_doorOpenHistory.push_back(newHistory);
+
+}
+
+void DoorManager::SetPassword(const std::string &password)
+{
+
+	bool allNum = true;
+
+	for (char letter : password)
+	{
+
+		int asNum = letter;
+
+		if (!(asNum > 47 && asNum < 58))
+		{
+
+			allNum = false;
+
+		}	
+
+	}
+
+	if (password.length() > 3 && allNum)
+	{
+
+		m_password = password;	
+		m_passwordChanged = true;
+
+	}
+	else
+	{
+
+		std::cout << "Password must be more then 3 digit and all of them must be numbers" << '\n';
+
+	}
 
 }
 
@@ -182,7 +218,8 @@ const std::string DoorManager::GenerateSecurityCode(int numOfChar)
 	for (int i = 0; i < numOfChar; i++)
 	{
 
-		code += char((rand() % (127 - 21)) + 21);
+		int dec = (rand() % (128 - 33)) + 33;
+		code += char(dec);
 
 	}
 

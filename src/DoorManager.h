@@ -1,4 +1,6 @@
 #pragma once
+
+#include <string>
 #include <map>
 #include <vector>
 
@@ -18,6 +20,8 @@ private:
 
 	void OpenDoorWithCard(const std::string &cardName);
 	void UpdateDoorOpenHistory(const Card &card);
+
+	void SetPassword(const std::string &password);
 
 	void AddCard(const std::string &name, int sex, int securityCodeLevel);
 	void RemoveCard(const int id);
@@ -60,9 +64,12 @@ private:
 	std::map<int, Card> m_cardsId;
 	std::map<std::string, Card> m_cardsName;
 
+	std::string m_password;
+
 	std::vector<History> m_doorOpenHistory;
 
 	bool m_cardInfoChanged = false;
 	bool m_doorOpenHistoryChanged = false;
+	bool m_passwordChanged = false;
 
 };
