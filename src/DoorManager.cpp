@@ -14,11 +14,7 @@ void DoorManager::Init()
 
 	ReadCardInfo();
 	ReadDoorOpenHistory();	
-
-	SetPassword("45313");
-
-	OpenDoorWithPassword("45313");
-	OpenDoorWithPassword("12345");
+	ReadPassword();
 
 	if (m_doorOpenHistoryChanged) 
 	{ 
@@ -34,6 +30,14 @@ void DoorManager::Init()
 		std::cout << "Saving Card Informations" << '\n';
 		SaveCardInfo(); 
 	
+	}
+
+	if (m_passwordChanged)
+	{
+
+		std::cout << "Saving password" << '\n';
+		SavePassword();
+
 	}
 
 }
@@ -111,6 +115,30 @@ void DoorManager::UpdateDoorOpenHistory()
 
 }
 
+void DoorManager::ReadPassword()
+{
+
+	std::fstream file;
+
+	file.open("data/password.txt", std::ios::in);
+
+	if (file.is_open())
+	{
+
+		file >> m_password;
+
+	}
+	else
+	{
+
+		std::cout << "Password file doesn't exist. Set password to 1234 as default" << '\n';
+		m_password = "1234";
+		m_passwordChanged = true;
+
+	}
+
+}
+
 void DoorManager::SetPassword(const std::string &password)
 {
 
@@ -143,6 +171,13 @@ void DoorManager::SetPassword(const std::string &password)
 		std::cout << "Password must be more then 3 digit and all of them must be numbers" << '\n';
 
 	}
+
+}
+
+void DoorManager::SavePassword()
+{
+
+	CreateFileAndWrite("data/password.txt", m_password);	
 
 }
 
@@ -488,7 +523,7 @@ void DoorManager::CreateFileAndWrite(const std::string &filePath, const std::str
 {
 
 	std::fstream file;
-	file.open(filePath, std::ios::out);
+	file.open(filePath, std::ios::out | std::ios::trunc);
 	file << line;
 	file.close();
 

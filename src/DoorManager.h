@@ -23,7 +23,9 @@ private:
 	void UpdateDoorOpenHistory(const Card &card);
 	void UpdateDoorOpenHistory();
 
+	void ReadPassword();
 	void SetPassword(const std::string &password);
+	void SavePassword();
 
 	void AddCard(const std::string &name, int sex, int securityCodeLevel);
 	void RemoveCard(const int id);
