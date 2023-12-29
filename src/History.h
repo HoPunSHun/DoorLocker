@@ -9,52 +9,43 @@ public:
 
 	History() {}
 
-	History(const std::string &cardName, int time_h, int time_m)
-		:	m_name		(cardName),
-			m_time_h	(time_h),
-			m_time_m	(time_m)
-	{}
+	History(const std::string &name, int year, int mon, int day, int hour, int min, int sec, int weekDay)
+		:	m_name		(name),
+			m_year		(year),
+			m_mon		(mon),
+			m_day		(day),
+			m_hour		(hour),
+			m_min		(min),
+			m_sec		(sec),
+			m_weekDay	(weekDay)	
+	{
 
+		using namespace std;
+
+		m_time = to_string(year) + ' ' + to_string(mon) + ' ' + to_string(day) + ' ' + to_string(hour) + ' ' + to_string(min) + ' ' + to_string(sec) + ' ' + to_string(weekDay);
 	
-	History(int time_h, int time_m)
-		:	m_name		("Password"),
-			m_time_h	(time_h),
-			m_time_m	(time_m)
-	{}
-	
+	}
+
 	const std::string GetName() const
 	{
 
 		return m_name;
 
-	}	
+	}
 
 	const std::string GetTime() const
 	{
 
-		return (std::to_string(m_time_h) + ':' + std::to_string(m_time_m));
+		return m_time;
 
 	}
 
-	int GetHour() const
-	{
-
-		return m_time_h;
-
-	}
-
-	int GetMinute() const
-	{
-
-		return m_time_m;
-
-	}
 
 private:
 
-	int m_time_h;
-	int m_time_m;
-
 	std::string m_name;
+	std::string m_time;
+
+	int m_year, m_mon, m_day, m_hour, m_min, m_sec, m_weekDay;
 
 };

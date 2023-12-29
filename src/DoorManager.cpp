@@ -3,7 +3,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <fstream>
-#include <cmath>
+#include <ctime>
+#include <chrono>
 
 DoorManager::DoorManager()
 	:	m_nextId	(0)
@@ -15,6 +16,10 @@ void DoorManager::Init()
 	ReadCardInfo();
 	ReadDoorOpenHistory();	
 	ReadPassword();
+
+	OpenDoorWithCard("Jeremy");
+
+	ListDoorOpenHistory();
 
 	if (m_doorOpenHistoryChanged) 
 	{ 
@@ -54,7 +59,7 @@ void DoorManager::OpenDoorWithCard(const std::string &cardName)
 	if (CheckCard(card))
 	{
 
-		UpdateDoorOpenHistory(card);
+		UpdateDoorOpenHistory(card.GetName());
 
 		std::cout << "Welcome. Door opened successfully" << '\n';	
 
@@ -77,7 +82,7 @@ void DoorManager::OpenDoorWithPassword(const std::string &password)
 	{
 
 		std::cout << "Welcome. Door opened successfully" << '\n';	
-		UpdateDoorOpenHistory();
+		UpdateDoorOpenHistory("Password");
 
 		m_doorOpenHistoryChanged = true;
 
@@ -91,25 +96,26 @@ void DoorManager::OpenDoorWithPassword(const std::string &password)
 
 }
 
-void DoorManager::UpdateDoorOpenHistory(const Card &card)
+void DoorManager::UpdateDoorOpenHistory(const std::string& name)
 {
 
-	int time_h = 13;
-	int time_m = 56;
+	std::string time_y, time_mon, time_d, time_h, time_m;
 
-	History newHistory(card.GetName(), time_h, time_m);
+	std::chrono::time_point nowTP = std::chrono::system_clock::now();
 
-	m_doorOpenHistory.push_back(newHistory);
+	std::time_t nowTT = std::chrono::system_clock::to_time_t(nowTP);
 
-}
+	std::tm nowTM = *(std::localtime(&nowTT));
 
-void DoorManager::UpdateDoorOpenHistory()
-{
+	int year = 1900 + nowTM.tm_year;
+	int mon = 1 + nowTM.tm_mon;
+	int day = nowTM.tm_mday;
+	int hour = nowTM.tm_hour;
+	int min = nowTM.tm_min;
+	int sec = nowTM.tm_sec;
+	int weekDay = nowTM.tm_wday;
 
-	int time_h = 13;
-	int time_m = 56;
-
-	History newHistory(time_h, time_m);
+	History newHistory(name, year, mon, day, hour, min, sec, weekDay);
 
 	m_doorOpenHistory.push_back(newHistory);
 
@@ -181,7 +187,7 @@ void DoorManager::SavePassword()
 
 }
 
-void DoorManager::AddCard(const std::string &name, int sex, int securityCodeLevel)
+void DoorManager::RegisterCard(const std::string &name, int sex, int securityCodeLevel)
 {
 
 	if (!CheckSameCardName(name))
@@ -340,29 +346,18 @@ void DoorManager::ReadDoorOpenHistory()
 	if (file.is_open())
 	{
 
-		std::string type;
+		std::string name;
 
-		while (file >> type)
+		while (file >> name) 
 		{
 
 			History history;
 
-			int time_h, time_m;
+			int year, mon, day, hour, min, sec, weekDay;
 
-			file >> time_h >> time_m;	
+			file >> year >> mon >> day >> hour >> min >> sec >> weekDay;
 
-			if (type != "Password")
-			{
-
-				history = History(type, time_h, time_m);
-
-			}
-			else
-			{
-
-				history = History(time_h, time_m);
-
-			}
+			history = History(name, year, mon, day, hour, min, sec, weekDay);
 
 			m_doorOpenHistory.push_back(history);
 	
@@ -462,7 +457,7 @@ void DoorManager::SaveDoorOpenHistory()
 		for (const auto& history : m_doorOpenHistory)
 		{
 
-			file << history.GetName() << ' ' << history.GetHour() << ' ' << history.GetMinute() << '\n';
+			file << history.GetName() << ' ' << history.GetTime() << '\n';;
 			
 		}
 

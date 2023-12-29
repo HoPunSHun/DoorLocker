@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <ctime>
 
 #include "Card.h"
 #include "History.h"
@@ -20,14 +21,13 @@ private:
 
 	void OpenDoorWithCard(const std::string &cardName);
 	void OpenDoorWithPassword(const std::string &password);
-	void UpdateDoorOpenHistory(const Card &card);
-	void UpdateDoorOpenHistory();
+	void UpdateDoorOpenHistory(const std::string &type);
 
 	void ReadPassword();
 	void SetPassword(const std::string &password);
 	void SavePassword();
 
-	void AddCard(const std::string &name, int sex, int securityCodeLevel);
+	void RegisterCard(const std::string &name, int sex, int securityCodeLevel);
 	void RemoveCard(const int id);
 	void RemoveCard(const std::string &cardName);
 	bool CheckCard(const Card &card);
