@@ -1,5 +1,5 @@
-#include <ctime>
 #include "DoorManager.h"
+#include <ctime>
 
 int main()
 {
