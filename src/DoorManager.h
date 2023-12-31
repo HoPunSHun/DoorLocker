@@ -5,8 +5,8 @@
 #include <vector>
 #include <ctime>
 
-#include "Card.h"
 #include "History.h"
+#include "Card.h"
 
 class DoorManager
 {
