@@ -17,9 +17,7 @@ void DoorManager::Init()
 	ReadDoorOpenHistory();	
 	ReadPassword();
 
-	OpenDoorWithCard("Jeremy");
-
-	ListDoorOpenHistory();
+	OpenDoorWithPassword("0313");
 
 	if (m_doorOpenHistoryChanged) 
 	{ 
@@ -137,9 +135,7 @@ void DoorManager::ReadPassword()
 	else
 	{
 
-		std::cout << "Password file doesn't exist. Set password to 1234 as default" << '\n';
-		m_password = "1234";
-		m_passwordChanged = true;
+		m_password = "";
 
 	}
 
@@ -158,6 +154,7 @@ void DoorManager::SetPassword(const std::string &password)
 		if (!(asNum > 47 && asNum < 58))
 		{
 
+			std::cout << "Password must be created by numbers" << '\n';
 			allNum = false;
 
 		}	
