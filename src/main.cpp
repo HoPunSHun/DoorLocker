@@ -1,5 +1,8 @@
-#include "DoorManager.h"
+#include <iostream>
+#include <string>
 #include <ctime>
+
+#include "DoorManager.h"
 
 int main()
 {

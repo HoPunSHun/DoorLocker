@@ -5,6 +5,15 @@
 #include <fstream>
 #include <ctime>
 #include <chrono>
+#include <conio.h>
+
+// AppStage:
+//
+// M : Menu
+// E : Exit
+// c : cards
+// o : openDoor
+// g : GetHistory
 
 DoorManager::DoorManager()
 	:	m_nextId	(0)
@@ -16,6 +25,134 @@ void DoorManager::Init()
 	ReadCardInfo();
 	ReadDoorOpenHistory();	
 	ReadPassword();	
+
+	m_stages['M'] = std::bind(&DoorManager::StageMenu, this);
+	m_stages['c'] = std::bind(&DoorManager::StageCard, this);
+	m_stages['o'] = std::bind(&DoorManager::StageOpenDoor, this);
+	m_stages['g'] = std::bind(&DoorManager::StageGetHistory, this);
+
+	while (m_appStage != 'E')
+	{	
+
+		m_stages[m_appStage]();
+
+	}	
+
+	Exit();
+
+}
+
+void DoorManager::StageMenu()
+{
+
+	ClearTerminal();
+
+	PrintMenu();
+
+	int option = InputOption("Option");
+
+	switch (option)
+	{
+
+		case 1:
+
+			m_appStage = 'c';
+
+			break;
+
+		case 2:
+
+			m_appStage = 'o';
+
+			break;
+
+		case 3:
+
+			m_appStage = 'g';
+
+			break;
+
+		case 4:
+
+			m_appStage = 'E';
+
+			break;
+
+		default:
+
+			break;
+
+	}
+
+}
+
+void DoorManager::StageCard()
+{
+
+	ClearTerminal();
+
+	std::cout << "Card" << '\n';
+	
+	std::cout << "Press any key to return...";
+
+	_getch();
+
+	m_appStage = 'M';
+
+}
+
+void DoorManager::StageOpenDoor()
+{
+}
+
+void DoorManager::StageGetHistory()
+{
+
+}
+
+void DoorManager::PrintMenu()
+{
+
+	std::cout << "DoorLocker" << '\n';
+	std::cout << '\n';
+
+	std::cout << "1.   Cards" << '\n';
+	std::cout << "2.  OpenDoor" << '\n';
+	std::cout << "3. GetHistorys" << '\n';
+	std::cout << "4.   Exit"<< '\n';
+
+}
+
+
+
+int DoorManager::InputOption(const std::string &msg)
+{
+
+	int number;
+
+	std::cout << msg << "(number)"<< ':';
+	std::cin >> number;
+
+	return number;
+
+}
+
+const std::string DoorManager::InputText(const std::string &msg)
+{
+
+	std::string inputText;
+
+	std::cout << msg << ':';
+	std::cin >> inputText;
+
+	return inputText;
+
+}
+
+void DoorManager::ClearTerminal()
+{
+
+	std::cout << "\033[2J\033[1;1H";
 
 }
 

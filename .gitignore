@@ -4,7 +4,7 @@ MakeFile
 MakeFile~
 run.bat
 run.bat~
-DoorLocker/main.exe
+output/main.exe
 
 #Multiple Files
 *.un~
@@ -15,4 +15,4 @@ DoorLocker/main.exe
 *.swp
 
 #Folders
-DoorLocker/data
+output

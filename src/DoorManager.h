@@ -4,6 +4,7 @@
 #include <map>
 #include <vector>
 #include <ctime>
+#include <functional>
 
 #include "History.h"
 #include "Card.h"
@@ -16,8 +17,22 @@ public:
 	DoorManager();
 
 	void Init();
+
+	void Exit();
 	
 private:
+
+	void StageMenu();
+	void StageCard();
+	void StageOpenDoor();
+	void StageGetHistory();
+
+	void PrintMenu();
+
+	int InputOption(const std::string &msg);
+	const std::string InputText(const std::string &msg);
+
+	void ClearTerminal();
 
 	void OpenDoorWithCard(const std::string &cardName);
 	void OpenDoorWithPassword(const std::string &password);
@@ -54,8 +69,6 @@ private:
 
 	void SaveNextId();
 
-	void Exit();
-
 	void CreateFile(const std::string &filePath);
 	void CreateFileAndWrite(const std::string &filePath, const std::string &line);
 
@@ -64,6 +77,9 @@ private:
 	void FILEOPENERROR(const std::string &fileName);
 
 private:
+
+	char m_appStage = 'M';
+	std::map<char, std::function<void()>> m_stages;
 
 	int m_nextId;
 
