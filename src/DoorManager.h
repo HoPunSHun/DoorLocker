@@ -54,6 +54,8 @@ private:
 
 	void SaveNextId();
 
+	void Exit();
+
 	void CreateFile(const std::string &filePath);
 	void CreateFileAndWrite(const std::string &filePath, const std::string &line);
 

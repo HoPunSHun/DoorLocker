@@ -15,33 +15,7 @@ void DoorManager::Init()
 
 	ReadCardInfo();
 	ReadDoorOpenHistory();	
-	ReadPassword();
-
-	OpenDoorWithPassword("0313");
-
-	if (m_doorOpenHistoryChanged) 
-	{ 
-
-		std::cout << "Saving Door Open Histories" << '\n';		
-		SaveDoorOpenHistory(); 
-	
-	}
-
-	if (m_cardInfoChanged)	
-	{ 
-		
-		std::cout << "Saving Card Informations" << '\n';
-		SaveCardInfo(); 
-	
-	}
-
-	if (m_passwordChanged)
-	{
-
-		std::cout << "Saving password" << '\n';
-		SavePassword();
-
-	}
+	ReadPassword();	
 
 }
 
@@ -499,6 +473,35 @@ void DoorManager::SaveCardInfo()
 	}
 
 	file.close();
+
+}
+
+void DoorManager::Exit()
+{
+
+	if (m_doorOpenHistoryChanged) 
+	{ 
+
+		std::cout << "Saving Door Open Histories" << '\n';		
+		SaveDoorOpenHistory(); 
+	
+	}
+
+	if (m_cardInfoChanged)	
+	{ 
+		
+		std::cout << "Saving Card Informations" << '\n';
+		SaveCardInfo(); 
+	
+	}
+
+	if (m_passwordChanged)
+	{
+
+		std::cout << "Saving password" << '\n';
+		SavePassword();
+
+	}
 
 }
 
