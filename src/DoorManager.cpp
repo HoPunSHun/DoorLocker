@@ -26,10 +26,10 @@ void DoorManager::Init()
 	ReadDoorOpenHistory();	
 	ReadPassword();	
 
-	m_stages['M'] = std::bind(&DoorManager::StageMenu, this);
-	m_stages['c'] = std::bind(&DoorManager::StageCard, this);
-	m_stages['o'] = std::bind(&DoorManager::StageOpenDoor, this);
-	m_stages['g'] = std::bind(&DoorManager::StageGetHistory, this);
+	m_stages['M'] = [this]() { StageMenu(); };
+	m_stages['c'] = [this]() { StageCard(); };
+	m_stages['o'] = [this]() { StageOpenDoor(); };
+	m_stages['g'] = [this]() { StageGetHistory(); };
 
 	while (m_appStage != 'E')
 	{	
