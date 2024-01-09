@@ -1,19 +1,12 @@
 #include "DoorManager.h"
 
 #include <iostream>
+#include <sstream>
 #include <cstdlib>
 #include <fstream>
 #include <ctime>
 #include <chrono>
 #include <conio.h>
-
-// AppStage:
-//
-// M : Menu
-// E : Exit
-// c : cards
-// o : openDoor
-// g : GetHistory
 
 DoorManager::DoorManager()
 	:	m_nextId	(0)
@@ -26,87 +19,9 @@ void DoorManager::Init()
 	ReadDoorOpenHistory();	
 	ReadPassword();	
 
-	m_stages['M'] = [this]() { StageMenu(); };
-	m_stages['c'] = [this]() { StageCard(); };
-	m_stages['o'] = [this]() { StageOpenDoor(); };
-	m_stages['g'] = [this]() { StageGetHistory(); };
-
-	while (m_appStage != 'E')
-	{	
-
-		m_stages[m_appStage]();
-
-	}	
+	InputOption("Option");
 
 	Exit();
-
-}
-
-void DoorManager::StageMenu()
-{
-
-	ClearTerminal();
-
-	PrintMenu();
-
-	int option = InputOption("Option");
-
-	switch (option)
-	{
-
-		case 1:
-
-			m_appStage = 'c';
-
-			break;
-
-		case 2:
-
-			m_appStage = 'o';
-
-			break;
-
-		case 3:
-
-			m_appStage = 'g';
-
-			break;
-
-		case 4:
-
-			m_appStage = 'E';
-
-			break;
-
-		default:
-
-			break;
-
-	}
-
-}
-
-void DoorManager::StageCard()
-{
-
-	ClearTerminal();
-
-	std::cout << "Card" << '\n';
-	
-	std::cout << "Press any key to return...";
-
-	_getch();
-
-	m_appStage = 'M';
-
-}
-
-void DoorManager::StageOpenDoor()
-{
-}
-
-void DoorManager::StageGetHistory()
-{
 
 }
 
@@ -123,17 +38,47 @@ void DoorManager::PrintMenu()
 
 }
 
-
-
-int DoorManager::InputOption(const std::string &msg)
+void DoorManager::PrintCardMenu()
 {
 
-	int number;
+	std::cout << "Card" << '\n';
+	std::cout << '\n';
 
-	std::cout << msg << "(number)"<< ':';
-	std::cin >> number;
+	std::cout << "1.  Register Card" << '\n';
+	std::cout << "2. Card Informations" << '\n';
+	std::cout << "3.    Set Card" << '\n';
+	std::cout << "4.      Back" << '\n';
 
-	return number;
+}
+
+int DoorManager::InputOption(const std::string &inputMsg)
+{
+
+	std::cout << inputMsg << "(number):";
+
+	int option = -1;
+
+	while (option == -1)
+	{
+
+		std::string input;
+
+		std::cin >> input;
+
+		std::istringstream translater(input);
+
+		if (!(translater >> option))
+		{
+
+			option = -1;
+
+			std::cout << inputMsg << "(number)(Invalid Number):";
+
+		}
+
+	}
+
+	return option;
 
 }
 

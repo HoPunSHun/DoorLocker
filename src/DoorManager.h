@@ -8,6 +8,7 @@
 
 #include "History.h"
 #include "Card.h"
+#include "Menu.h"
 
 class DoorManager
 {
@@ -28,6 +29,7 @@ private:
 	void StageGetHistory();
 
 	void PrintMenu();
+	void PrintCardMenu();
 
 	int InputOption(const std::string &msg);
 	const std::string InputText(const std::string &msg);
@@ -78,8 +80,8 @@ private:
 
 private:
 
-	char m_appStage = 'M';
-	std::map<char, std::function<void()>> m_stages;
+	std::string m_stage;
+	std::map<std::string, std::function<void()>> m_stageMaps;
 
 	int m_nextId;
 
