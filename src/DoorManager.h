@@ -28,9 +28,6 @@ private:
 	void StageOpenDoor();
 	void StageGetHistory();
 
-	void PrintMenu();
-	void PrintCardMenu();
-
 	int InputOption(const std::string &msg);
 	const std::string InputText(const std::string &msg);
 
@@ -80,8 +77,9 @@ private:
 
 private:
 
-	std::string m_stage;
-	std::map<std::string, std::function<void()>> m_stageMaps;
+	std::string m_currentMenu;
+
+	std::map<std::string, Menu> m_menu;
 
 	int m_nextId;
 

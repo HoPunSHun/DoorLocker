@@ -19,35 +19,13 @@ void DoorManager::Init()
 	ReadDoorOpenHistory();	
 	ReadPassword();	
 
-	InputOption("Option");
+	m_currentMenu = "MainMenu";
+
+	m_menu["MainMenu"] = Menu("MainMenu");
+
+	m_menu[m_currentMenu].PrintMenu();
 
 	Exit();
-
-}
-
-void DoorManager::PrintMenu()
-{
-
-	std::cout << "DoorLocker" << '\n';
-	std::cout << '\n';
-
-	std::cout << "1.   Cards" << '\n';
-	std::cout << "2.  OpenDoor" << '\n';
-	std::cout << "3. GetHistorys" << '\n';
-	std::cout << "4.   Exit"<< '\n';
-
-}
-
-void DoorManager::PrintCardMenu()
-{
-
-	std::cout << "Card" << '\n';
-	std::cout << '\n';
-
-	std::cout << "1.  Register Card" << '\n';
-	std::cout << "2. Card Informations" << '\n';
-	std::cout << "3.    Set Card" << '\n';
-	std::cout << "4.      Back" << '\n';
 
 }
 
@@ -106,7 +84,7 @@ void DoorManager::OpenDoorWithCard(const std::string &cardName)
 
 	Card card;
 
-	std::string cardPath = "data/" + cardName + ".txt";
+	std::string cardPath = "data/Cards/" + cardName + ".txt";
 
 	ReadCardInfo(cardPath, card);
 
@@ -248,7 +226,7 @@ void DoorManager::RegisterCard(const std::string &name, int sex, int securityCod
 
 		std::string securityCode = GenerateSecurityCode(securityCodeLevel);
 
-		std::string cardPath = "data/" + name + ".txt";
+		std::string cardPath = "data/Cards/" + name + ".txt";
 
 		Card card(name, sex, m_nextId, securityCode);	
 
