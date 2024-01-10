@@ -18,10 +18,14 @@ public:
 	DoorManager();
 
 	void Init();
-
-	void Exit();
 	
 private:
+
+	void InitMenu();
+
+	void MainLoop();
+
+	void Exit();
 
 	void StageMenu();
 	void StageCard();
@@ -30,6 +34,8 @@ private:
 
 	int InputOption(const std::string &msg);
 	const std::string InputText(const std::string &msg);
+
+	void PrintMsgAndWait(const std::string &msg);
 
 	void ClearTerminal();
 
@@ -61,6 +67,8 @@ private:
 	void ReadCardInfo(const std::string &cardPath, Card &card);
 	
 	void ReadCardInfo();
+
+	void SaveData();
 
 	void SaveDoorOpenHistory();
 

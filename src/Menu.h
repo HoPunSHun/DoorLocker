@@ -43,10 +43,10 @@ public:
 	
 	}
 
-	void AddOption(const std::function<void()> &option)
+	void AddOption(int optionNum, const std::function<void()> &option)
 	{
 
-		m_options.push_back(option);	
+		m_options[optionNum] = option;
 	
 	}
 
@@ -60,6 +60,7 @@ public:
 	void PrintMenu()
 	{
 
+		std::cout << "\033c";
 		std::cout << m_text;
 
 	}
@@ -71,12 +72,19 @@ public:
 
 	}
 
+	const std::map<int, std::function<void()>> &GetOptions()
+	{
+
+		return m_options;
+
+	}
+
 private:
 
 	std::string m_name;
 
 	std::string m_text;
 
-	std::vector<std::function<void()>> m_options;
+	std::map<int, std::function<void()>> m_options;
 
 };

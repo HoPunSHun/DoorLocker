@@ -19,42 +19,99 @@ void DoorManager::Init()
 	ReadDoorOpenHistory();	
 	ReadPassword();	
 
+	InitMenu();
+
 	m_currentMenu = "MainMenu";
 
+	MainLoop();
+
+}
+
+void DoorManager::InitMenu()
+{
+
 	m_menu["MainMenu"] = Menu("MainMenu");
+	m_menu["DataMenu"] = Menu("DataMenu");
+	m_menu["OthersMenu"] = Menu("OthersMenu");
 
-	m_menu[m_currentMenu].PrintMenu();
+	m_menu["MainMenu"].AddOption(1,
+		[this]() { }
+	);
 
-	Exit();
+	m_menu["MainMenu"].AddOption(2,
+		[this](){ m_currentMenu = "DataMenu"; }
+	);
+
+	m_menu["MainMenu"].AddOption(3,
+		[this](){ m_currentMenu = "OthersMenu"; }
+	);
+
+	m_menu["MainMenu"].AddOption(4,
+		[this]() { Exit(); }
+	);
+
+	m_menu["DataMenu"].AddOption(3,
+		[this]() { m_currentMenu = "MainMenu"; }
+	);
+
+	m_menu["OthersMenu"].AddOption(5,
+		[this]() { m_currentMenu = "MainMenu"; }
+	);
+
+}
+
+void DoorManager::MainLoop()
+{
+
+	while (m_currentMenu != "Exit")
+	{
+
+		m_menu[m_currentMenu].PrintMenu();
+
+		int option = InputOption("Option");
+	
+		auto menuOptions = m_menu[m_currentMenu].GetOptions();
+
+		if (menuOptions.find(option) != menuOptions.end())
+		{
+
+			menuOptions[option]();
+
+		}
+		else
+		{
+
+			PrintMsgAndWait("Invalid Option");
+
+		}
+
+	}
+
+}
+
+void DoorManager::Exit()
+{
+
+	m_currentMenu = "Exit";
+
+	SaveData();
 
 }
 
 int DoorManager::InputOption(const std::string &inputMsg)
 {
 
+	int option;
+
 	std::cout << inputMsg << "(number):";
 
-	int option = -1;
+	std::string input;
 
-	while (option == -1)
-	{
+	std::cin >> input;
 
-		std::string input;
+	std::istringstream translater(input);
 
-		std::cin >> input;
-
-		std::istringstream translater(input);
-
-		if (!(translater >> option))
-		{
-
-			option = -1;
-
-			std::cout << inputMsg << "(number)(Invalid Number):";
-
-		}
-
-	}
+	translater >> option;
 
 	return option;
 
@@ -72,10 +129,19 @@ const std::string DoorManager::InputText(const std::string &msg)
 
 }
 
+void DoorManager::PrintMsgAndWait(const std::string &msg)
+{
+
+	std::cout << msg << '\n';
+	std::cout << "Press any key to continue...";
+	_getch();
+
+}
+
 void DoorManager::ClearTerminal()
 {
 
-	std::cout << "\033[2J\033[1;1H";
+	std::cout << "\033c";
 
 }
 
@@ -536,7 +602,7 @@ void DoorManager::SaveCardInfo()
 
 }
 
-void DoorManager::Exit()
+void DoorManager::SaveData()
 {
 
 	if (m_doorOpenHistoryChanged) 
