@@ -27,10 +27,9 @@ private:
 
 	void Exit();
 
-	void StageMenu();
-	void StageCard();
-	void StageOpenDoor();
-	void StageGetHistory();
+	void UserOpenDoor();
+	void UserGetCardInfo();
+	void UserRegisterCard();
 
 	int InputOption(const std::string &msg);
 	const std::string InputText(const std::string &msg);

@@ -4,7 +4,6 @@
 #include <sstream>
 #include <cstdlib>
 #include <fstream>
-#include <ctime>
 #include <chrono>
 #include <conio.h>
 
@@ -31,19 +30,21 @@ void DoorManager::InitMenu()
 {
 
 	m_menu["MainMenu"] = Menu("MainMenu");
+	m_menu["OpenDoorMenu"] = Menu("OpenDoorMenu");
 	m_menu["DataMenu"] = Menu("DataMenu");
 	m_menu["OthersMenu"] = Menu("OthersMenu");
+	m_menu["CardInfoMenu"] = Menu("CardInfoMenu");
 
 	m_menu["MainMenu"].AddOption(1,
-		[this]() { }
+		[this]() { UserOpenDoor(); }
 	);
 
 	m_menu["MainMenu"].AddOption(2,
-		[this](){ m_currentMenu = "DataMenu"; }
+		[this]() { m_currentMenu = "DataMenu"; }
 	);
 
 	m_menu["MainMenu"].AddOption(3,
-		[this](){ m_currentMenu = "OthersMenu"; }
+		[this]() { m_currentMenu = "OthersMenu"; }
 	);
 
 	m_menu["MainMenu"].AddOption(4,
@@ -54,8 +55,24 @@ void DoorManager::InitMenu()
 		[this]() { m_currentMenu = "MainMenu"; }
 	);
 
+	m_menu["DataMenu"].AddOption(1,
+		[this]() { m_currentMenu = "CardInfoMenu"; }
+	);
+
+	m_menu["OthersMenu"].AddOption(1,
+		[this]() { UserRegisterCard(); }
+	);
+
 	m_menu["OthersMenu"].AddOption(5,
 		[this]() { m_currentMenu = "MainMenu"; }
+	);
+
+	m_menu["CardInfoMenu"].AddOption(1,
+		[this]() { UserGetCardInfo(); }
+	);
+
+	m_menu["CardInfoMenu"].AddOption(4,
+		[this]() { m_currentMenu = "DataMenu"; }
 	);
 
 }
@@ -96,6 +113,73 @@ void DoorManager::Exit()
 
 	SaveData();
 
+}
+
+void DoorManager::UserOpenDoor()
+{
+
+	ClearTerminal();
+
+	int option = InputOption("Card or password (1 || 2)");
+
+	switch (option)
+	{
+
+	case 1:
+
+		OpenDoorWithCard(InputText("Card Name"));
+
+		break;
+
+	case 2:
+
+		OpenDoorWithPassword(InputText("Password"));
+
+		break;
+
+	default:
+
+		PrintMsgAndWait("Invalid Option");
+
+	}
+
+}
+
+void DoorManager::UserGetCardInfo()
+{
+	
+	std::cout << "Name\tSex	\tId\tSecurity Code" << '\n';
+
+	ListCardInfo();
+
+	PrintMsgAndWait("");
+
+}
+
+void DoorManager::UserRegisterCard()
+{
+
+	ClearTerminal();
+
+	std::string cardName = InputText("Card Name");
+	int sex = InputOption("Sex");
+	int securityLevel = InputOption("Security Level (The number of digit of security codes)");
+
+	RegisterCard(cardName, sex, securityLevel);
+
+	if (m_cardsName.find(cardName) != m_cardsName.end())
+	{
+
+		PrintMsgAndWait("Card Registered Successfully");
+
+	}
+	else
+	{
+
+		PrintMsgAndWait("Unable to register card");
+
+	}
+	
 }
 
 int DoorManager::InputOption(const std::string &inputMsg)
@@ -159,7 +243,7 @@ void DoorManager::OpenDoorWithCard(const std::string &cardName)
 
 		UpdateDoorOpenHistory(card.GetName());
 
-		std::cout << "Welcome. Door opened successfully" << '\n';	
+		PrintMsgAndWait("Welcome. Door opened successfully");
 
 		m_doorOpenHistoryChanged = true;
 
@@ -167,7 +251,7 @@ void DoorManager::OpenDoorWithCard(const std::string &cardName)
 	else
 	{
 
-		std::cout << "Unable to open. Unregister card" << '\n';
+		PrintMsgAndWait("Unable to open. Unregister card");
 
 	}
 
@@ -179,7 +263,7 @@ void DoorManager::OpenDoorWithPassword(const std::string &password)
 	if (password == m_password)
 	{
 
-		std::cout << "Welcome. Door opened successfully" << '\n';	
+		PrintMsgAndWait("Welcome. Door opened successfully");
 		UpdateDoorOpenHistory("Password");
 
 		m_doorOpenHistoryChanged = true;
@@ -188,7 +272,7 @@ void DoorManager::OpenDoorWithPassword(const std::string &password)
 	else
 	{
 
-		std::cout << "Password incorrect" << '\n';
+		PrintMsgAndWait("Password incorrect");
 
 	}
 
@@ -414,7 +498,7 @@ void DoorManager::ListCardInfo()
 
 		Card card = it->second;
 
-		std::cout << loopCount << '.' << card.GetName() << ' ' << card.GetSex() << ' ' << card.GetId() << ' ' << card.GetSecurityCode() << '\n';
+		std::cout << loopCount << '.' << card.GetName() << '\t' << card.GetSex() << '\t' << card.GetId() << '\t' << card.GetSecurityCode() << '\n';
 
 		loopCount++;
 
