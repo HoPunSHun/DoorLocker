@@ -34,6 +34,7 @@ void DoorManager::InitMenu()
 	m_menu["DataMenu"] = Menu("DataMenu");
 	m_menu["OthersMenu"] = Menu("OthersMenu");
 	m_menu["CardInfoMenu"] = Menu("CardInfoMenu");
+	m_menu["DoorOpenHistoryMenu"] = Menu("DoorOpenHistoryMenu");
 
 	m_menu["MainMenu"].AddOption(1,
 		[this]() { UserOpenDoor(); }
@@ -59,8 +60,20 @@ void DoorManager::InitMenu()
 		[this]() { m_currentMenu = "CardInfoMenu"; }
 	);
 
+	m_menu["DataMenu"].AddOption(2,
+		[this]() { m_currentMenu = "DoorOpenHistoryMenu"; }
+	);
+
 	m_menu["OthersMenu"].AddOption(1,
 		[this]() { UserRegisterCard(); }
+	);
+
+	m_menu["OthersMenu"].AddOption(2,
+		[this]() { UserDeleteCard(); }
+	);
+
+	m_menu["OthersMenu"].AddOption(4,
+		[this]() { UserDeleteHistory(); }
 	);
 
 	m_menu["OthersMenu"].AddOption(5,
@@ -73,6 +86,14 @@ void DoorManager::InitMenu()
 
 	m_menu["CardInfoMenu"].AddOption(4,
 		[this]() { m_currentMenu = "DataMenu"; }
+	);
+
+	m_menu["DoorOpenHistoryMenu"].AddOption(1,
+		[this]() { UserGetDoorOpenHistory(); }
+	);
+
+	m_menu["DoorOpenHistoryMenu"].AddOption(9,
+		[this]() { m_currentMenu = "OthersMenu"; }
 	);
 
 }
@@ -147,10 +168,21 @@ void DoorManager::UserOpenDoor()
 
 void DoorManager::UserGetCardInfo()
 {
-	
-	std::cout << "Name\tSex	\tId\tSecurity Code" << '\n';
+
+	std::cout << "(Name//Sex//id//SecurityCode)" << '\n';
 
 	ListCardInfo();
+
+	PrintMsgAndWait("");
+
+}
+
+void DoorManager::UserGetDoorOpenHistory()
+{
+
+	std::cout << "(Type//YY//MM//DD/HR//MIN//SEC//WEEKDAY)" << '\n';
+
+	ListDoorOpenHistory();
 
 	PrintMsgAndWait("");
 
@@ -162,7 +194,7 @@ void DoorManager::UserRegisterCard()
 	ClearTerminal();
 
 	std::string cardName = InputText("Card Name");
-	int sex = InputOption("Sex");
+	bool sex = InputOption("Sex(0/1)");
 	int securityLevel = InputOption("Security Level (The number of digit of security codes)");
 
 	RegisterCard(cardName, sex, securityLevel);
@@ -180,6 +212,41 @@ void DoorManager::UserRegisterCard()
 
 	}
 	
+}
+
+void DoorManager::UserDeleteCard()
+{
+
+	ClearTerminal();
+
+	std::string cardName = InputText("Card Name");
+
+	if (!(m_cardsName.find(cardName) == m_cardsName.end()))
+	{
+
+		DeleteCard(cardName);
+
+		PrintMsgAndWait("Card Delete Successfully");
+
+	}
+	else
+	{
+
+		PrintMsgAndWait("Card not found");
+
+	}
+
+}
+
+void DoorManager::UserDeleteHistory()
+{
+	
+	std::cout << "(Type//YY//MM//DD/HR//MIN//SEC//WEEKDAY)" << '\n';
+
+	ListDoorOpenHistory();
+
+	bool option = InputOption("1.	All\n2.	Select by numbers\n");
+
 }
 
 int DoorManager::InputOption(const std::string &inputMsg)
@@ -399,7 +466,7 @@ void DoorManager::RegisterCard(const std::string &name, int sex, int securityCod
 
 }
 
-void DoorManager::RemoveCard(const int id)
+void DoorManager::DeleteCard(const int id)
 {
 
 	m_cardsName.erase(m_cardsId[id].GetName());
@@ -409,7 +476,7 @@ void DoorManager::RemoveCard(const int id)
 
 }
 
-void DoorManager::RemoveCard(const std::string &cardName)
+void DoorManager::DeleteCard(const std::string &cardName)
 {
 
 	m_cardsId.erase(m_cardsName[cardName].GetId());

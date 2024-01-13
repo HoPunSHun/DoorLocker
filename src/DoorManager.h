@@ -29,7 +29,10 @@ private:
 
 	void UserOpenDoor();
 	void UserGetCardInfo();
+	void UserGetDoorOpenHistory();
 	void UserRegisterCard();
+	void UserDeleteCard();
+	void UserDeleteHistory();
 
 	int InputOption(const std::string &msg);
 	const std::string InputText(const std::string &msg);
@@ -47,8 +50,8 @@ private:
 	void SavePassword();
 
 	void RegisterCard(const std::string &name, int sex, int securityCodeLevel);
-	void RemoveCard(const int id);
-	void RemoveCard(const std::string &cardName);
+	void DeleteCard(const int id);
+	void DeleteCard(const std::string &cardName);
 	bool CheckCard(const Card &card);
 
 	void SetCard(const std::string &cardName, const Card &card);
