@@ -1,6 +1,7 @@
 #include "DoorManager.h"
 
 #include <iostream>
+#include <cstring>
 #include <sstream>
 #include <cstdlib>
 #include <fstream>
@@ -72,11 +73,11 @@ void DoorManager::InitMenu()
 		[this]() { UserDeleteCard(); }
 	);
 
-	m_menu["OthersMenu"].AddOption(4,
+	m_menu["OthersMenu"].AddOption(3,
 		[this]() { UserDeleteHistory(); }
 	);
 
-	m_menu["OthersMenu"].AddOption(5,
+	m_menu["OthersMenu"].AddOption(4,
 		[this]() { m_currentMenu = "MainMenu"; }
 	);
 
@@ -92,7 +93,11 @@ void DoorManager::InitMenu()
 		[this]() { UserGetDoorOpenHistory(); }
 	);
 
-	m_menu["DoorOpenHistoryMenu"].AddOption(9,
+	m_menu["DoorOpenHistoryMenu"].AddOption(2,
+		[this]() { UserSearchDoorOpenHistory(); }
+	);
+
+	m_menu["DoorOpenHistoryMenu"].AddOption(3,
 		[this]() { m_currentMenu = "OthersMenu"; }
 	);
 
@@ -106,7 +111,7 @@ void DoorManager::MainLoop()
 
 		m_menu[m_currentMenu].PrintMenu();
 
-		int option = InputOption("Option");
+		int option = InputNumber("Option");
 	
 		auto menuOptions = m_menu[m_currentMenu].GetOptions();
 
@@ -141,7 +146,7 @@ void DoorManager::UserOpenDoor()
 
 	ClearTerminal();
 
-	int option = InputOption("Card or password (1 || 2)");
+	int option = InputNumber("Card or password (1 || 2)");
 
 	switch (option)
 	{
@@ -180,11 +185,17 @@ void DoorManager::UserGetCardInfo()
 void DoorManager::UserGetDoorOpenHistory()
 {
 
-	std::cout << "(Type//YY//MM//DD/HR//MIN//SEC//WEEKDAY)" << '\n';
-
 	ListDoorOpenHistory();
 
 	PrintMsgAndWait("");
+
+}
+
+void DoorManager::UserSearchDoorOpenHistory()
+{
+
+	std::cout << "    Search by" << '\n';	
+	std::cout << "	(skip - s, skip all - sa)" << '\n' << '\n';
 
 }
 
@@ -194,8 +205,8 @@ void DoorManager::UserRegisterCard()
 	ClearTerminal();
 
 	std::string cardName = InputText("Card Name");
-	bool sex = InputOption("Sex(0/1)");
-	int securityLevel = InputOption("Security Level (The number of digit of security codes)");
+	bool sex = InputNumber("Sex(0/1)");
+	int securityLevel = InputNumber("Security Level (The number of digit of security codes)");
 
 	RegisterCard(cardName, sex, securityLevel);
 
@@ -241,15 +252,10 @@ void DoorManager::UserDeleteCard()
 void DoorManager::UserDeleteHistory()
 {
 	
-	std::cout << "(Type//YY//MM//DD/HR//MIN//SEC//WEEKDAY)" << '\n';
-
-	ListDoorOpenHistory();
-
-	bool option = InputOption("1.	All\n2.	Select by numbers\n");
 
 }
 
-int DoorManager::InputOption(const std::string &inputMsg)
+int DoorManager::InputNumber(const std::string &inputMsg)
 {
 
 	int option;
@@ -576,10 +582,23 @@ void DoorManager::ListCardInfo()
 void DoorManager::ListDoorOpenHistory()
 {
 
+	int count = 0;
+
 	for (const auto &history : m_doorOpenHistory)
 	{
 
-		std::cout << history.GetName() << ' ' << history.GetTime() << '\n';
+		int nameSize = history.GetName().size();
+		char cardName[16];
+
+		strcpy(cardName, history.GetName().c_str());
+
+		memset(cardName + nameSize, ' ', 16 - nameSize);
+
+		cardName[15] = '\0';
+
+		std::cout << cardName;
+		std::cout << history.GetTime() << '\n';
+		count++;
 
 	}
 

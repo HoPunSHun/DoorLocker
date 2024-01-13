@@ -30,11 +30,12 @@ private:
 	void UserOpenDoor();
 	void UserGetCardInfo();
 	void UserGetDoorOpenHistory();
+	void UserSearchDoorOpenHistory();
 	void UserRegisterCard();
 	void UserDeleteCard();
 	void UserDeleteHistory();
 
-	int InputOption(const std::string &msg);
+	int InputNumber(const std::string &msg);
 	const std::string InputText(const std::string &msg);
 
 	void PrintMsgAndWait(const std::string &msg);
